@@ -1,1 +1,51 @@
-{}
+{
+    "properties": {
+        "displayName": "HelloBlueprintDemo",
+        "description": "Testing my first Blueprint as Code; it should contain firstly the 3 Azure Policy resources: 2 Policy definitions for RG & Resources allowed locations + an initiative formed of the two.",
+        "targetScope": "subscription",
+        "parameters": {
+            "Policy_Allowed-Locations": {
+                "type": "array",
+                "metadata": {
+                    "displayName": "List of Allowed Locations",
+                    "description": "List of the Allowed Locations used for Resource Groups and Resources deployments.",
+                    "strongType": "location"
+                },
+                "defaultValue": []
+            },
+            "Organization_Name": {
+                "type": "string",
+                "metadata": {
+                    "displayName": "Organization Name",
+                    "description": "Name of your organization."
+                }
+            },
+            "Azure_Region": {
+                "type": "string",
+                "metadata": {
+                    "displayName": "Azure Region",
+                    "description": "Azure Region to which you want to deploy your Resource Groups.",
+                    "strongType": "location"
+                },
+                "defaultValue": ""
+            }
+        },
+        "resourceGroups": {
+            "Network-RG": {
+                "name": "[concat(parameters('Organization_Name'), '-network-rg')]",
+                "location": "[parameters('Azure_Region')]",
+                "metadata": {
+                    "displayName": "Resource Group for Networks"
+                },
+                "dependsOn": []
+            },
+            "Application-RG": {
+                "name": "[concat(parameters('Azure_Region'), '-application-rg')]",
+                "location": "[parameters('Azure_Region')]",
+                "metadata": {
+                    "description": "Resource Group for Application"
+                }
+            }
+        }
+    }
+}

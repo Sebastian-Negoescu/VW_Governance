@@ -1,1 +1,16 @@
-{}
+{
+    "kind": "policyAssignment",
+    "properties": {
+        "displayName": "_*Allowed Locations Policy Set - Assignment",
+        "dependsOn": [],
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/allowed-locations-initiative",
+        "parameters": {
+            "resourcesAllowedLocations": {
+                "value": "[parameters('Policy_Allowed-Locations')]"
+            },
+            "rgAllowedLocations": {
+                "value": "[parameters('Policy_Allowed-Locations')]"
+            }
+        }
+    }
+}
