@@ -40,10 +40,10 @@
                 "dependsOn": []
             },
             "Application-RG": {
-                "name": "[concat(parameters('Azure_Region'), '-application-rg')]",
+                "name": "[concat(parameters('Organization_Name'), '-application-rg')]",
                 "location": "[parameters('Azure_Region')]",
                 "metadata": {
-                    "description": "Resource Group for Application"
+                    "displayName": "Resource Group for Application"
                 }
             }
         }

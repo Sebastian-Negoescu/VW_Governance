@@ -3,7 +3,7 @@
     "properties": {
         "displayName": "_*Allowed Locations Policy Set - Assignment",
         "dependsOn": [],
-        "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/allowed-locations-initiative",
+        "policyDefinitionId": "/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/providers/Microsoft.Authorization/policySetDefinitions/allowed-locations-initiative",
         "parameters": {
             "resourcesAllowedLocations": {
                 "value": "[parameters('Policy_Allowed-Locations')]"
