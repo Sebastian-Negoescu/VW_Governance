@@ -12,7 +12,7 @@ $location = (Get-Content -Path $deploymentFile | ConvertFrom-Json).parameters.lo
 $validation = Test-AzDeployment -Location $location -TemplateFile $deploymentFile
 
 If ($validation.Code) {
-    Write-Host "Oops... Look like there are some errors."
+    Write-Host "Oops... Looks like there are some errors."
     Write-Host "Error code: $($validation.Code)"
     Write-Host "Error Message: $($validation.Message)"
     Write-Host "Error Details: $($validation.Details)"
