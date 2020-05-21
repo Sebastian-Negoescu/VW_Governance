@@ -67,7 +67,7 @@
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployment', 'rgAllowedLocationsPolicyDeployment')]",
+                "[resourceId('Microsoft.Resources/deployments', 'rgAllowedLocationsPolicyDeployment')]",
                 "[resourceId('Microsoft.Resources/deployments', 'resourcesAllowedLocationsPolicyDeployment')]"
             ]
         }
