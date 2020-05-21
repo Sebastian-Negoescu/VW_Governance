@@ -48,7 +48,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "uri": "[concat(variables('templateBaseUrl'), variables('childTemplates').resourcesAllowedLocationsPolicy)]",
-                    "contenVersion": "1.0.0.0"
+                    "contentVersion": "1.0.0.0"
                 }
             }
         },
