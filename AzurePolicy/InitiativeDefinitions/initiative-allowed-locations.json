@@ -67,7 +67,7 @@
                 "policyType": "Custom",
                 "policyDefinitions": [
                     {
-                        "policyDefinitionId": "[reference(resourceId('Microsoft.Authorization/policyDefinitions', 'allowed-locations-resource-groups'), '2019-06-01', 'Full').PolicyDefinitionId]",
+                        "policyDefinitionId": "[reference(resourceId('Microsoft.Authorization/policyDefinitions', 'allowed-locations-resource-groups'), '2019-06-01', 'Full').resourceId]",
                         "parameters": {
                             "rgAllowedLocations": {
                                 "value": "[[parameters('rgAllowedLocations')]"
@@ -75,7 +75,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[reference(resourceId('Microsoft.Authorization/policyDefinitions', 'allowed-locations-resources'), '2019-06-01', 'Full').PolicyDefinitionId]",
+                        "policyDefinitionId": "[reference(resourceId('Microsoft.Authorization/policyDefinitions', 'allowed-locations-resources'), '2019-06-01', 'Full').resourceId]",
                         "parameters": {
                             "resourcesAllowedLocations": {
                                 "value": "[[parameters('resourcesAllowedLocations')]"
