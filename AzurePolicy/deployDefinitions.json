@@ -17,7 +17,7 @@
 
             // General
             "rgAllowedLocationsPolicy": "/PolicyDefinitions/policy-resource-group-location--deny.json",
-            "resourcesAllowedLocationsPolicy": "/PolicyDefinitions/policy-resources-allowed-locations--deny.json",
+            "resourcesAllowedLocationsPolicy": "/PolicyDefinitions/policy-resources-location--deny.json",
 
             // Initiative Definitions
             "allowedLocationsInitiative": "/InitiativeDefinitions/initiative-allowed-locations.json"
