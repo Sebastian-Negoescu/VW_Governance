@@ -1,1 +1,89 @@
-{}
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Region for deployment operations."
+            },
+            "defaultValue": "westeurope"
+        }
+    },
+    "variables": {
+        "templateBaseUrl": "https://raw.githubusercontent.com/Sebastian-Negoescu/VW_Governance/master/AzurePolicy",
+        "childTemplates": {
+            // Policy Definitons
+
+            // General
+            "rgAllowedLocationsPolicy": "/PolicyDefinitions/policy-resource-group-location--deny.json",
+            "resourcesAllowedLocationsPolicy": "/PolicyDefinitions/policy-resources-allowed-locations--deny.json",
+
+            // Initiative Definitions
+            "allowedLocationsInitiative": "/InitiativeDefinitions/initiative-allowed-locations.json"
+        }
+    },
+    "resources": [
+        // Policy Deployments
+        // General
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "rgAllowedLocationsPolicyDeployment",
+            "location": "[parameters('location')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('templateBaseUrl'), variables('childTemplates').rgAllowedLocationsPolicy)]",
+                    "contentVersion": "1.0.0.0"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "resourcesAllowedLocationsPolicyDeployment",
+            "location": "[parameters('location')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('templateBaseUrl'), variables('childTemplates').resourcesAllowedLocationsPolicy)]",
+                    "contenVersion": "1.0.0.0"
+                }
+            }
+        },
+        // Initiative Deployments
+        // General
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "allowedLocationsInitiativeDeployment",
+            "location": "[parameters('location')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('templateBaseUrl'), variables('childTemplates').allowedLocationsInitiative)]",
+                    "contentVersion": "1.0.0.0"
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployment', 'rgAllowedLocationsPolicyDeployment')]",
+                "[resourceId('Microsoft.Resources/deployments', 'resourcesAllowedLocationsPolicyDeployment')]"
+            ]
+        }
+    ],
+    "outputs": {
+        "rgAllowedLocationsPolicyIdDeploymentOutput": {
+            "type": "string",
+            "value": "[reference('rgAllowedLocationsPolicyDeployment').outputs.rgAllowedLocationsPolicyId.value]"
+        },
+        "resourcesAllowedLocationsPolicyIdDeploymentOutput": {
+            "type": "string",
+            "value": "[reference('resourcesAllowedLocationsPolicyDeployment').outputs.resourcesAllowedLocationsPolicyId.value]"
+        },
+        "allowedLocationsInitiativeIdDeploymentOutput": {
+            "type": "string",
+            "value": "[reference('allowedLocationsInitiativeDeployment').outputs.allowedLocationsInitiativeId.value]"
+        }
+    }
+}
