@@ -1,0 +1,63 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {
+        "policyName": "allowed-locations-resources",
+        "policyDisplayName": "_*Allowed Location for Resources",
+        "policyDescription": "This policy enforces location on specific Azure Regions for Resources deployments (create/update)."
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policyDefinitions",
+            "apiVersion": "2019-06-01",
+            "name": "[variables('policyName')]",
+            "properties": {
+                "displayName": "[variables('policyDisplayName')]",
+                "description": "[variables('policyDescription')]",
+                "metadata": {
+                    "category": "General"
+                },
+                "mode": "Indexed",
+                "policyType": "Custom",
+                "parameters": {
+                    "resourcesAllowedLocations": {
+                        "type": "Array",
+                        "metadata": {
+                            "displayName": "Allowed Locations [Resources]",
+                            "description": "Allowed locations for Resources deployments.",
+                            "strongType": "location"
+                        }
+                    }
+                },
+                "policyRule": {
+                    "if": {
+                        "allOf": [
+                            {
+                                "field": "location",
+                                "notIn": "[[parameters('resourcesAllowedLocations')]]"
+                            },
+                            {
+                                "field": "location",
+                                "notEquals": "global"
+                            },
+                            {
+                                "field": "type",
+                                "notEquals": "Microsoft.AzureActiveDirectory/b2cDirectories"
+                            }
+                        ]
+                    },
+                    "then": {
+                        "effect": "deny"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "resourcesAllowedLocationsPolicyId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Authorization/policyDefinitions', variables('policyName'))]"
+        }
+    }
+}

@@ -1,0 +1,95 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {
+        "initiativeName": "allowed-locations-initiative",
+        "initiativeDisplayName": "_*Allowed Locations Policy Set",
+        "initiativeDescription": "This initiative is a collection of all the Allowed Location Policies."
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policySetDefinitions",
+            "apiVersion": "2019-06-01",
+            "name": "[variables('initiativeName')]",
+            "properties": {
+                "displayName": "[variables('initiativeDisplayName')]",
+                "description": "[variables('initiativeDescription')]",
+                "metadata": {
+                    "category": "General"
+                },
+                "parameters": {
+                    "rgAllowedLocations": {
+                        "type": "Array",
+                        "metadata": {
+                            "displayName": "Allowed Location [ResourceGroups]",
+                            "description": "Allowed locations for Resource Group deployments.",
+                            "strongType": "location"
+                        },
+                        "allowedValues": [
+                            "westeurope",
+                            "northeurope",
+                            "uksouth",
+                            "ukwest",
+                            "francecentral",
+                            "francesouth",
+                            "switzerlandnorth",
+                            "switzerlandwest",
+                            "germanynorth",
+                            "germanywestcentral",
+                            "norwaywest",
+                            "norwayeast"
+                        ]
+                    },
+                    "resourcesAllowedLocations": {
+                        "type": "Array",
+                        "metadata": {
+                            "displayName": "Allowed Locations [Resources]",
+                            "description": "Allowed locations for Resources deployments.",
+                            "strongType": "location"
+                        },
+                        "allowedValues": [
+                            "westeurope",
+                            "northeurope",
+                            "uksouth",
+                            "ukwest",
+                            "francecentral",
+                            "francesouth",
+                            "switzerlandnorth",
+                            "switzerlandwest",
+                            "germanynorth",
+                            "germanywestcentral",
+                            "norwaywest",
+                            "norwayeast"                            
+                        ]
+                    }
+                },
+                "policyType": "Custom",
+                "policyDefinitions": [
+                    {
+                        "policyDefinitionId": "[reference(resourceId('Microsoft.Authorization/policyDefinitions', 'allowed-locations-resource-groups'), '2019-06-01', 'Full').PolicyDefinitionId]",
+                        "parameters": {
+                            "rgAllowedLocations": {
+                                "value": "[[parameters('rgAllowedLocations')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[reference(resourceId('Microsoft.Authorization/policyDefinitions', 'allowed-locations-resources'), '2019-06-01', 'Full').PolicyDefinitionId]",
+                        "parameters": {
+                            "resourcesAllowedLocations": {
+                                "value": "[[parameters('resourcesAllowedLocations')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+        "allowedLocationsInitiativeId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Authorization/policySetDefinitons', variables('initiativeName'))]"
+        }
+    }
+}
