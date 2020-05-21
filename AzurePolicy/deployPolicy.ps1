@@ -7,9 +7,9 @@ $tenant = "sebinego.onmicrosoft.com"
 Connect-AzAccount -ServicePrincipal -Credential $credential -Tenant $tenant -Subscription "VSEnterprise_DEV"
 
 ##### Validate ARM Templates
-$deploymentFile = "$(Get-Location)/deployDefinitions.json"
-$location = (Get-Content -Path $deploymentFile | ConvertFrom-Json).parameters.location.defaultValue
-$validation = Test-AzDeployment -Location $location -TemplateFile $deploymentFile
+$templateUri = "https://raw.githubusercontent.com/Sebastian-Negoescu/VW_Governance/master/AzurePolicy/deployDefinitions.json"
+$location = ((Invoke-WebRequest -Method GET -Uri $templateUri).Content | ConvertFrom-Json).parameters.location.defaultValue
+$validation = Test-AzDeployment -Location $location -TemplateUri $templateUri
 
 If ($validation.Code) {
     Write-Host "Oops... Looks like there are some errors."
@@ -17,6 +17,6 @@ If ($validation.Code) {
     Write-Host "Error Message: $($validation.Message)"
     Write-Host "Error Details: $($validation.Details)"
 } Else {
-    $deployment = New-AzDeployment -Location $location -TemplateFile $deploymentFile
+    $deployment = New-AzDeployment -Location $location -TemplateUri $templateUri
     Write-Host "Deployment finished. See you next time!"
 }
