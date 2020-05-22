@@ -25,7 +25,7 @@
                         "metadata": {
                             "displayName": "Allowed SKUs [Storage Accounts]",
                             "description": "Allowed SKUs for Storage Account",
-                            "strongType": "storageSkus"
+                            "strongType": "StorageSKUs"
                         },
                         "allowedValues": [
                             "Standard_LRS",
@@ -39,7 +39,9 @@
                     {
                         "policyDefinitionId": "[resourceId('Microsoft.Authorization/policyDefinitions', 'allowed-skus-storage-accounts')]",
                         "parameters": {
-                            "value": "[[parameters('allowedSkus')]"
+                            "allowedSkus": {
+                                "value": "[[parameters('allowedSkus')]"
+                            }
                         }
                     }
                 ]
