@@ -35,15 +35,40 @@ Write-Host "Step 3 - Save Draft | Publish New Version | Update Assignment" -Fore
 Write-Host "Importing the new Blueprint as Draft" -ForegroundColor "DarkYellow"
 Import-AzBlueprintWithArtifact -Name $bpName -SubscriptionId $targetSubscription.Id -InputPath $targetDirectory -Force -Confirm:$false -ErrorVariable $errr
 
+
+######## OBSERVATION
+<#
+Might create an array with already existing Organizations
+Read-Host for the Organization_Name -> if it doesn't exist, create another if/else statement to check if the user wants to create a new BP for that org;
+If "yes" > create a new BP > add the organization name to already existing array
+
+IDK just an idea
+#>
 If ($?) {
     Write-Host "Publishing the Blueprint as version $bpNewVersion" -ForegroundColor "DarkYellow"
     Publish-AzBlueprint -Blueprint $blueprint -Version $bpNewVersion
     
-    Write-Host "Update Blueprint Assignment for Organization" -ForegroundColor "DarkYello"
-    $org = "Ostroveni"
-    $updatedBlueprint = Get-AzBlueprint -Name $bpName -SubscriptionId $targetSubscription.Id -Version $bpNewVersion
-    $assignmentFile = "$bpCodeDirectory/$($org)Assignment.json"
-    Set-AzBlueprintAssignment -Name "$bpName-$($org)Assignment" -SubscriptionId $targetSubscription.Id -Blueprint $updatedBlueprint -AssignmentFile $assignmentFile
+    $org = Read-Host "Name of your organization..."
+    $newOrUpdate = Read-Host "Is this a new assignment?"
+    If (($newOrUpdate -eq "Yes") -or ($newOrUpdate -eq "yes")) {
+        If (($org -eq "Ostroveni") -or ($org -eq "TunariiVechi")) {
+            Write-Host "Let's create the Blueprint Assignment first..." -ForegroundColor "DarkCyan"
+            $updatedBlueprint = Get-AzBlueprint -Name $bpName -SubscriptionId $targetSubscription.Id -Version $bpNewVersion
+            $assignmentFile = "$bpCodeDirectory/$($org)Assignment.json"
+            New-AzBlueprintAssignment -Name "$bpName-$($org)Assignment" -SubscriptionId $targetSubscription.Id -Blueprint $updatedBlueprint -AssignmentFile $assignmentFile
+        } Else {
+            Write-Host "Organization does not exist." -ForegroundColor "DarkRed"
+        }
+    } Else {
+        If (($org -eq "Ostroveni") -or ($org -eq "TunariiVechi")) {
+            Write-Host "Update Blueprint Assignment for Organization $org" -ForegroundColor "DarkYellow"
+            $updatedBlueprint = Get-AzBlueprint -Name $bpName -SubscriptionId $targetSubscription.Id -Version $bpNewVersion
+            $assignmentFile = "$bpCodeDirectory/$($org)Assignment.json"
+            Set-AzBlueprintAssignment -Name "$bpName-$($org)Assignment" -SubscriptionId $targetSubscription.Id -Blueprint $updatedBlueprint -AssignmentFile $assignmentFile
+        } Else {
+            Write-Host "Organization does not exist." -ForegroundColor "DarkRed"
+        }
+    }
 } Else {
     Write-Host "Received Error: $errr"
 }
