@@ -53,7 +53,7 @@
                 }
             },
             "Security-RG": {
-                "name": "[concat(parameters('Organization_Name'), '-Sercurity-RG')]",
+                "name": "[concat(parameters('Organization_Name'), '-Security-RG')]",
                 "location": "[parameters('Azure_Region')]",
                 "metadata": {
                     "displayName": "Resource Group for Security"
