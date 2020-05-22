@@ -31,6 +31,6 @@ Write-Host "Blueprint Last Version: $bpLastVersion" -ForegroundColor DarkCyan
 Write-Host "Blueprint New Version: $bpNewVersion" -ForegroundColor DarkCyan
 
 Write-Host "Importing the new Blueprint as Draft" -ForegroundColor "DarkYellow"
-Import-AzBlueprintWithArtifact -Name $bpName -SubscriptionId $targetSubscription.Id -InputPath $targetDirectory
+Import-AzBlueprintWithArtifact -Name $bpName -SubscriptionId $targetSubscription.Id -InputPath $targetDirectory -Force -Confirm:$false
 Write-Host "Publishing the Blueprint as version $bpNewVersion" -ForegroundColor "DarkYellow"
 Publish-AzBlueprint -Blueprint $blueprint -Version $bpNewVersion
