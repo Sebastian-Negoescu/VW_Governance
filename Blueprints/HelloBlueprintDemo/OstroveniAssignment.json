@@ -18,6 +18,12 @@
                     "ukwest"
                 ]
             },
+            "Policy_Allowed-Skus-StorageAccounts": {
+                "value": [
+                    "Standard_LRS",
+                    "Standard_RAGRS"
+                ]
+            },
             "Organization_Name": {
                 "value": "Ostroveni"
             },

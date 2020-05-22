@@ -13,6 +13,15 @@
                 },
                 "defaultValue": []
             },
+            "Policy_Allowed-Skus-StorageAccounts": {
+                "type": "array",
+                "metadata": {
+                    "displayName": "Allowed SKUs [Storage Accounts]",
+                    "description": "Allowed SKUs for Storage Accounts",
+                    "strongType": "StorageSKUs"
+                },
+                "defaultValue": []
+            },
             "Organization_Name": {
                 "type": "string",
                 "metadata": {
@@ -51,6 +60,12 @@
                 "location": "[parameters('Azure_Region')]",
                 "metadata": {
                     "displayName": "Resource Group for Security"
+                }
+            },
+            "Storage-RG": {
+                "name": "[concat(parameters('Organization_Name'), '-Storage-RG')]",
+                "metadata": {
+                    "displayName": "Resource Group for Storage"
                 }
             }
         }
