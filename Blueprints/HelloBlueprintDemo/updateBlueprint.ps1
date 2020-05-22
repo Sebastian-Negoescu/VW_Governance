@@ -16,7 +16,7 @@ If ($connection) {
 ##### Collect information
 Write-Host "Step 2 - Collect necessary information" -ForegroundColor "DarkYellow"
 $targetSubscription = Get-AzSubscription | Where-Object Name -eq "VSEnterprise_DEV"
-$bpName = "HelloBlueprintDemo"
+$bpName = Read-Host "Name of the Azure Blueprint you want to update..."
 $bpCodeDirectory = (Get-ChildItem -Recurse -Filter "Blueprint.json" | Where-Object FullName -Like "*$bpName*").DirectoryName
 $blueprint = Get-AzBlueprint -Name $bpName -SubscriptionId $targetSubscription.Id
 $bpLastVersion = [Double] $blueprint.Versions[$blueprint.Version.Length-1]
