@@ -32,7 +32,7 @@
         },
         "resourceGroups": {
             "Network-RG": {
-                "name": "[concat(parameters('Organization_Name'), '-network-rg')]",
+                "name": "[concat(parameters('Organization_Name'), '-Network-RG')]",
                 "location": "[parameters('Azure_Region')]",
                 "metadata": {
                     "displayName": "Resource Group for Networks"
@@ -40,10 +40,17 @@
                 "dependsOn": []
             },
             "Application-RG": {
-                "name": "[concat(parameters('Organization_Name'), '-application-rg')]",
+                "name": "[concat(parameters('Organization_Name'), '-Application-RG')]",
                 "location": "[parameters('Azure_Region')]",
                 "metadata": {
                     "displayName": "Resource Group for Application"
+                }
+            },
+            "Security-RG": {
+                "name": "[concat(parameters('Organization_Name'), '-Sercurity-RG')]",
+                "location": "[parameters('Azure_Region')]",
+                "metadata": {
+                    "displayName": "Resource Group for Security"
                 }
             }
         }
