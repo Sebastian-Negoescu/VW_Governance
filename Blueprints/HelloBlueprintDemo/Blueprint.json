@@ -64,6 +64,7 @@
             },
             "Storage-RG": {
                 "name": "[concat(parameters('Organization_Name'), '-Storage-RG')]",
+                "location": "[parameters('Azure_Region')]",
                 "metadata": {
                     "displayName": "Resource Group for Storage"
                 }
