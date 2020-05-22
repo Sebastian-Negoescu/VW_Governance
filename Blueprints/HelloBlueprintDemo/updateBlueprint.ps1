@@ -30,7 +30,16 @@ Write-Host "Blueprint Code Directory: $bpCodeDirectory" -ForegroundColor DarkCya
 Write-Host "Blueprint Last Version: $bpLastVersion" -ForegroundColor DarkCyan
 Write-Host "Blueprint New Version: $bpNewVersion" -ForegroundColor DarkCyan
 
+##### Save the new Definition, Publish it as a new version and update the Assignment
+Write-Host "Step 3 - Save Draft | Publish New Version | Update Assignment" -ForegroundColor "DarkYellow"
 Write-Host "Importing the new Blueprint as Draft" -ForegroundColor "DarkYellow"
 Import-AzBlueprintWithArtifact -Name $bpName -SubscriptionId $targetSubscription.Id -InputPath $targetDirectory -Force -Confirm:$false
+
 Write-Host "Publishing the Blueprint as version $bpNewVersion" -ForegroundColor "DarkYellow"
 Publish-AzBlueprint -Blueprint $blueprint -Version $bpNewVersion
+
+Write-Host "Update Blueprint Assignment for Organization"
+$org = "Ostroveni"
+$updatedBlueprint = Get-AzBlueprint -Name $bpName -SubscriptionId $targetSubscription.Id -Version $bpNewVersion
+$assignmentFile = "$bpCodeDirectory/$($org)Assignment.json"
+Set-AzBlueprintAssignment -Name "$bpName-$($org)Assignment" -SubscriptionId $targetSubscription.Id -Blueprint $updatedBlueprint -AssignmentFile $assignmentFile
