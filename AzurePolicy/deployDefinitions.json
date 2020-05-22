@@ -19,8 +19,16 @@
             "rgAllowedLocationsPolicy": "/PolicyDefinitions/policy-resource-group-location--deny.json",
             "resourcesAllowedLocationsPolicy": "/PolicyDefinitions/policy-resources-location--deny.json",
 
+            // Storage
+            "storageAccountsAllowedSkusPolicy": "/PolicyDefinitions/policy-storage-account-skus--deny.json",
+
             // Initiative Definitions
-            "allowedLocationsInitiative": "/InitiativeDefinitions/initiative-allowed-locations.json"
+
+            // General
+            "allowedLocationsInitiative": "/InitiativeDefinitions/initiative-allowed-locations.json",
+            
+            // Storage
+            "storageInitiative": "/InitiativeDefinitions/initiative-storage.json"
         }
     },
     "resources": [
@@ -52,6 +60,20 @@
                 }
             }
         },
+        //Storage
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "storageAccountsAllowedSkusPolicyDeployment",
+            "location": "[parameters('location')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('templateBaseUrl'), variables('childTemplates').storageAccountsAllowedSkusPolicy)]",
+                    "contentVersion": "1.0.0.0"
+                }
+            }
+        },
         // Initiative Deployments
         // General
         {
@@ -70,6 +92,20 @@
                 "[resourceId('Microsoft.Resources/deployments', 'rgAllowedLocationsPolicyDeployment')]",
                 "[resourceId('Microsoft.Resources/deployments', 'resourcesAllowedLocationsPolicyDeployment')]"
             ]
+        },
+        // Storage
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "storageInitiativeDeployment",
+            "location": "[parameters('location')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('templateBaseUrl'), variables('childTemplates').storageInitiative)]",
+                    "contentVersion": "1.0.0.0"
+                }
+            }
         }
     ],
     "outputs": {
@@ -84,6 +120,14 @@
         "allowedLocationsInitiativeIdDeploymentOutput": {
             "type": "string",
             "value": "[reference('allowedLocationsInitiativeDeployment').outputs.allowedLocationsInitiativeId.value]"
+        },
+        "storageAccountsAllowedSkusPolicyIdDeploymentOutput": {
+            "type": "string",
+            "value": "[reference('storageAccountsAllowedSkusPolicyDeployment').outputs.storageAccountsAllowedSkusPolicyId.value]"
+        },
+        "storageInitiativeIdDeploymentOutput": {
+            "type": "string",
+            "value": "[reference('storageInitiativeDeployment').outputs.storageInitiativeId.value]"
         }
     }
 }

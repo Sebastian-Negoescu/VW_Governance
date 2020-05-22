@@ -1,0 +1,61 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {
+        "policyName": "allowed-skus-storage-accounts",
+        "policyDisplayName": "_*Allowed SKUs for Storage Accounts",
+        "policyDescription": "Restrict the SKU options when creating/updating Storage Accounts."
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policyDefinitions",
+            "apiVersion": "2019-06-01",
+            "name": "[variables('policyName')]",
+            "properties": {
+                "displayName": "[variables('policyDisplayName')]",
+                "description": "[variables('policyDescription')]",
+                "metadata": {
+                    "category": "Storage"
+                },
+                "mode": "Indexed",
+                "policyType": "Custom",
+                "parameters": {
+                    "allowedSkus": {
+                        "type": "Array",
+                        "metadata": {
+                            "displayName": "Allowed SKUs [Storage Accounts]",
+                            "description": "Allowed SKUs for Storage Accounts",
+                            "strongType": "StorageSKUs"
+                        }
+                    }
+                },
+                "policyRule": {
+                    "if": {
+                        "allOf": [
+                            {
+                                "field": "type",
+                                "equals": "Microsoft.Storage/storageAccounts"
+                            },
+                            {
+                                "not": {
+                                    "field": "Microsoft.Storage/storageAccounts/sku.name",
+                                    "in": "[[parameters('allowedSkus')]"
+                                }
+                            }
+                        ]
+                    },
+                    "then": {
+                        "effect": "deny"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "storageAccountsAllowedSkusPolicyId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Authorization/policyDefinitions', variables('policyName'))]"
+        }
+    }
+}

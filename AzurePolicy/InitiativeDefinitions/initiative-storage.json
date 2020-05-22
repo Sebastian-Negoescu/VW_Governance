@@ -1,0 +1,55 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {
+        "initiativeName": "storage-initiative",
+        "initiativeDisplayName": "_*Storage Policy Set",
+        "initiativeDescription": "This initiative is a collection of Storage related policies."
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policySetDefinitions",
+            "apiVersion": "2019-06-01",
+            "name": "[variables('initiativeName')]",
+            "properties": {
+                "displayName": "[variables('initiativeDisplayName')]",
+                "description": "[variables('initiativeDescription')]",
+                "metadata": {
+                    "category": "Storage"
+                },
+                "policyType": "Custom",
+                "parameters": {
+                    "allowedSkus": {
+                        "type": "Array",
+                        "metadata": {
+                            "displayName": "Allowed SKUs [Storage Accounts]",
+                            "description": "Allowed SKUs for Storage Account",
+                            "strongType": "storageSkus"
+                        },
+                        "allowedValues": [
+                            "Standard_LRS",
+                            "Standard_GRS",
+                            "Standard_ZRS",
+                            "Standard_RAGRS"
+                        ]
+                    }
+                },
+                "policyDefinitions": [
+                    {
+                        "policyDefinitionId": "[resourceId('Microsoft.Authorization/policyDefinitions', 'allowed-skus-storage-accounts')]",
+                        "parameters": {
+                            "value": "[[parameters('allowedSkus')]"
+                        }
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+        "storageInitiativeId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('initiativeName'))]"
+        }
+    }
+}
