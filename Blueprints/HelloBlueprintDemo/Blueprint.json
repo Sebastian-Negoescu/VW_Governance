@@ -10,8 +10,7 @@
                     "displayName": "List of Allowed Locations",
                     "description": "List of the Allowed Locations used for Resource Groups and Resources deployments.",
                     "strongType": "location"
-                },
-                "defaultValue": []
+                }
             },
             "Policy_Allowed-Skus-StorageAccounts": {
                 "type": "array",
@@ -19,8 +18,7 @@
                     "displayName": "Allowed SKUs [Storage Accounts]",
                     "description": "Allowed SKUs for Storage Accounts",
                     "strongType": "StorageSKUs"
-                },
-                "defaultValue": []
+                }
             },
             "Organization_Name": {
                 "type": "string",
@@ -35,8 +33,7 @@
                     "displayName": "Azure Region",
                     "description": "Azure Region to which you want to deploy your Resource Groups.",
                     "strongType": "location"
-                },
-                "defaultValue": ""
+                }
             }
         },
         "resourceGroups": {
