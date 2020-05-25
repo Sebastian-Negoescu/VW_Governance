@@ -28,6 +28,14 @@
                     {
                         "policyDefinitionId": "[resourceId('Microsoft.Authorization/policyDefinitions', 'enforce-cost-center-tag-resources')]",
                         "parameters": {}
+                    },
+                    {
+                        "policyDefinitionId": "[resourceId('Microsoft.Authorization/policyDefinitions', 'enforce-env-tag-rg')]",
+                        "parameters": {}
+                    },
+                    {
+                        "policyDefinitionId": "[resourceId('Microsoft.Authorization/policyDefinitions', 'enforce-env-tag-resources')]",
+                        "parameters": {}
                     }
                 ]
             }
