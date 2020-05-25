@@ -174,7 +174,11 @@
                     "uri": "[concat(variables('templateBaseUrl'), variables('childTemplates').taggingInitiative)]",
                     "contentVersion": "1.0.0.0"
                 }
-            }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'costCenterTagRgPolicyDeployment')]",
+                "[resourceId('Microsoft.Resources/deployments', 'costCenterTagResourcesPolicyDeployment')]"
+            ]
         }
     ],
     "outputs": {
