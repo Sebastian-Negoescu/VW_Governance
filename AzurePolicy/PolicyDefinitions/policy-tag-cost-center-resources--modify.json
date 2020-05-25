@@ -39,7 +39,7 @@
                             },
                             {
                                 "field": "[[resourceGroup().tags[parameters('tagName')]]",
-                                "notEquals": ""
+                                "notEquals": null
                             }
                         ]
                     },
