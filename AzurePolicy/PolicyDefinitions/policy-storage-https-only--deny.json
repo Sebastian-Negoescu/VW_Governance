@@ -29,7 +29,7 @@
                                 "equals": "Microsoft.Storage/storageAccounts"
                             },
                             {
-                                "field": "Microsoft.Storage/storageAccount/supportsHttpsTrafficOnly",
+                                "field": "Microsoft.Storage/storageAccounts/supportsHttpsTrafficOnly",
                                 "notEquals": "true"
                             }
                         ]
