@@ -38,9 +38,18 @@
                                 "exists": false
                             },
                             {
-                                "field": "[[resourceGroup().tags[parameters('tagName')]]",
-                                "notEquals": "undefined"
+                                "allOf": [
+                                    {
+                                        "field": "type",
+                                        "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+                                    },
+                                    {
+                                        "field": "[[concat('tags[', parameters('tagName'), ']')]",
+                                        "notEquals": "undefined"
+                                    }
+                                ]
                             }
+
                         ]
                     },
                     "then": {
