@@ -1,0 +1,53 @@
+{
+    "kind": "template",
+    "properties": {
+        "displayName": "Deploy Storage Account",
+        "description": "Deploy Storage Account for Application's static file storage.",
+        "dependsOn": [],
+        "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "Organization_Name": {
+                    "type": "string"
+                },
+                "Environment": {
+                    "type": "string"
+                },
+                "Location": {
+                    "type": "string"
+                }
+            },
+            "variables": {
+                "stgAcctName": "[toLower(concat(parameters('Organization_Name'), parameters('Environment'), 'stgacct'))]"
+            },
+            "resources": [
+                {
+                    "type": "Microsoft.Storage/storageAccounts",
+                    "apiVersion": "2019-06-01",
+                    "name": "[variables('stgAcctName')]",
+                    "location": "[parameters('Location')]",
+                    "sku": {
+                        "name": "Standard_LRS"
+                    },
+                    "kind": "StorageV2",
+                    "properties": {
+                        "supportsHttpsTrafficOnly": true
+                    }
+                }
+            ]
+        },
+        "resourceGroup": "Storage-RG",
+        "parameters": {
+            "Organization_Name": {
+                "value": "[parameters('Organization_Name')]"
+            },
+            "Environment": {
+                "value": "[parameters('Environment')]"
+            },
+            "Location": {
+                "value": "[parameters('Azure_Region')]"
+            }
+        }
+    }
+}

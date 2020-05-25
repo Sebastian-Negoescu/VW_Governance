@@ -29,6 +29,12 @@
             },
             "Azure_Region": {
                 "value": "westeurope"
+            },
+            "Environment": {
+                "value": "PROD"
+            },
+            "CostCenter": {
+                "value": "Sebi Negoescu"
             }
         }
     }

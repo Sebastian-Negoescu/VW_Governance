@@ -34,37 +34,67 @@
                     "description": "Azure Region to which you want to deploy your Resource Groups.",
                     "strongType": "location"
                 }
+            },
+            "Environment": {
+                "type": "string",
+                "metadata": {
+                    "displayName": "Environment",
+                    "description": "Environmennt type: Prod, Dev, etc."
+                }
+            },
+            "CostCenter": {
+                "type": "string",
+                "metadata": {
+                    "displayName": "Required Tags",
+                    "description": "The tags required by the Azure Policy Governance enforcement."
+                }
             }
         },
         "resourceGroups": {
             "Network-RG": {
-                "name": "[concat(parameters('Organization_Name'), '-Network-RG')]",
+                "name": "[concat(parameters('Organization_Name'), '-', parameters('Environment'), '-Network-RG')]",
                 "location": "[parameters('Azure_Region')]",
                 "metadata": {
                     "displayName": "Resource Group for Networks"
                 },
-                "dependsOn": []
+                "dependsOn": [],
+                "tags": {
+                    "CostCenter": "[parameters('CostCenter')]",
+                    "Env": "[parameters('Environment')]"
+                }
             },
             "Application-RG": {
-                "name": "[concat(parameters('Organization_Name'), '-Application-RG')]",
+                "name": "[concat(parameters('Organization_Name'), '-', parameters('Environment'), '-Application-RG')]",
                 "location": "[parameters('Azure_Region')]",
                 "metadata": {
                     "displayName": "Resource Group for Application"
-                }
+                },
+                "tags": {
+                    "CostCenter": "[parameters('CostCenter')]",
+                    "Env": "[parameters('Environment')]"
+                }                
             },
             "Security-RG": {
-                "name": "[concat(parameters('Organization_Name'), '-Security-RG')]",
+                "name": "[concat(parameters('Organization_Name'), '-', parameters('Environment'), '-Security-RG')]",
                 "location": "[parameters('Azure_Region')]",
                 "metadata": {
                     "displayName": "Resource Group for Security"
-                }
+                },
+                "tags": {
+                    "CostCenter": "[parameters('CostCenter')]",
+                    "Env": "[parameters('Environment')]"
+                }                
             },
             "Storage-RG": {
-                "name": "[concat(parameters('Organization_Name'), '-Storage-RG')]",
+                "name": "[concat(parameters('Organization_Name'), '-', parameters('Environment'), '-Storage-RG')]",
                 "location": "[parameters('Azure_Region')]",
                 "metadata": {
                     "displayName": "Resource Group for Storage"
-                }
+                },
+                "tags": {
+                    "CostCenter": "[parameters('CostCenter')]",
+                    "Env": "[parameters('Environment')]"
+                }                
             }
         }
     }
