@@ -32,8 +32,16 @@
                 },
                 "policyRule": {
                     "if": {
-                        "field": "[[concat('tags[', parameters('tagName'), ']')]",
-                        "exists": false
+                        "allOf": [
+                            {
+                                "field": "[[concat('tags[', parameters('tagName'), ']')]",
+                                "exists": false
+                            },
+                            {
+                                "field": "[[resourceGroup().tags[parameters('tagName')]]",
+                                "notEquals": ""
+                            }
+                        ]
                     },
                     "then": {
                         "effect": "modify",
@@ -45,7 +53,7 @@
                                 {
                                     "operation": "add",
                                     "field": "[[concat('tags[', parameters('tagName'), ']')]",
-                                    "value": "[[concat('resourceGroup().tags[', parameters('tagName'), ']')]"
+                                    "value": "[[resourceGroup().tags[parameters('tagName')]]"
                                 }
                             ]
                         }

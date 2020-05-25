@@ -39,7 +39,7 @@
                             },
                             {
                                 "field": "[[concat('tags[', parameters('tagName'), ']')]",
-                                "notEquals": "[[concat('resourceGroup().tags[', parameters('tagName'), ']')]"
+                                "notEquals": "[[resourceGroup().tags[parameters('tagName')]]"
                             }
                         ]
                     },
@@ -53,7 +53,7 @@
                                 {
                                     "operation": "addOrReplace",
                                     "field": "[[concat('tags[', parameters('tagName'), ']')]",
-                                    "value": "[[concat('resourceGroup().tags[', parameters('tagName'), ']')]"
+                                    "value": "[[resourceGroup().tags[parameters('tagName')]]"
                                 }
                             ]
                         }
