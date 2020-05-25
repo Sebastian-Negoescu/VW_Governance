@@ -21,7 +21,7 @@
 
             // Storage
             "storageAccountsAllowedSkusPolicy": "/PolicyDefinitions/policy-storage-account-skus--deny.json",
-            "storageAccountsHttpsOnlyPolicy": "/PolicyDefinitions/policy-storage-https-only--deny",
+            "storageAccountsHttpsOnlyPolicy": "/PolicyDefinitions/policy-storage-https-only--deny.json",
 
             // Initiative Definitions
 
