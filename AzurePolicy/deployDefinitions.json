@@ -13,7 +13,9 @@
     "variables": {
         "templateBaseUrl": "https://raw.githubusercontent.com/Sebastian-Negoescu/VW_Governance/master/AzurePolicy",
         "childTemplates": {
-            // Policy Definitons
+            ////////////////////////
+            // Policy Definitons ///
+            ////////////////////////
 
             // General
             "rgAllowedLocationsPolicy": "/PolicyDefinitions/policy-resource-group-location--deny.json",
@@ -23,13 +25,22 @@
             "storageAccountsAllowedSkusPolicy": "/PolicyDefinitions/policy-storage-account-skus--deny.json",
             "storageAccountsHttpsOnlyPolicy": "/PolicyDefinitions/policy-storage-https-only--deny.json",
 
-            // Initiative Definitions
+            // Tagging
+            "costCenterTagRgPolicy": "/PolicyDefinitions/policy-tag-cost-center-rg--deny.json",
+            "costCenterTagResourcesPolicy": "/PolicyDefinitions/policy-tag-cost-center-resources--modify.json",
+
+            ////////////////////////////
+            // Initiative Definitions //
+            ////////////////////////////
 
             // General
             "allowedLocationsInitiative": "/InitiativeDefinitions/initiative-allowed-locations.json",
             
             // Storage
-            "storageInitiative": "/InitiativeDefinitions/initiative-storage.json"
+            "storageInitiative": "/InitiativeDefinitions/initiative-storage.json",
+
+            // Tagging
+            "taggingInitiative": "/InitiativeDefinitions/initiative-tagging.json"
         }
     },
     "resources": [
@@ -87,6 +98,33 @@
                 }
             }
         },
+        // Tagging
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "costCenterTagRgPolicyDeployment",
+            "location": "[parameters('location')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('templateBaseUrl'), variables('childTemplates').costCenterTagRgPolicy)]",
+                    "contentVersion": "1.0.0.0"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "costCenterTagResourcesPolicyDeployment",
+            "location": "[parameters('location')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('templateBaseUrl'), variables('childTemplates').costCenterTagResourcesPolicy)]",
+                    "contentVersion": "1.0.0.0"
+                }
+            }
+        },
         // Initiative Deployments
         // General
         {
@@ -123,6 +161,20 @@
                 "[resourceId('Microsoft.Resources/deployments', 'storageAccountsAllowedSkusPolicyDeployment')]",
                 "[resourceId('Microsoft.Resources/deployments', 'storageAccountsHttpsOnlyPolicyDeployment')]"
             ]
+        },
+        // Tagging
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "taggingInitiativeDeployment",
+            "location": "[parameters('location')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('templateBaseUrl'), variables('childTemplates').taggingInitiative)]",
+                    "contentVersion": "1.0.0.0"
+                }
+            }
         }
     ],
     "outputs": {
@@ -149,6 +201,18 @@
         "storageInitiativeIdDeploymentOutput": {
             "type": "string",
             "value": "[reference('storageInitiativeDeployment').outputs.storageInitiativeId.value]"
+        },
+        "costCenterTagRgPolicyDeploymentOutput": {
+            "type": "string",
+            "value": "[reference('costCenterTagRgPolicyDeployment').outputs.costCenterTagRgPolicyId]"
+        },
+        "costCenterTagResourcesPolicyDeploymentOutput": {
+            "type": "string",
+            "value": "[reference('costCenterTagResourcesPolicyDeployment').outputs.costCenterTagResourcesPolicyId.value]"
+        },
+        "taggingInitiativeDeploymentOutput": {
+            "type": "string",
+            "value": "[reference('taggingInitiativeDeployment').outputs.taggingInitiativeId.value]"
         }
     }
 }
