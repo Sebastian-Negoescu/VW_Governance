@@ -208,7 +208,7 @@
         },
         "costCenterTagRgPolicyDeploymentOutput": {
             "type": "string",
-            "value": "[reference('costCenterTagRgPolicyDeployment').outputs.costCenterTagRgPolicyId]"
+            "value": "[reference('costCenterTagRgPolicyDeployment').outputs.costCenterTagRgPolicyId.value]"
         },
         "costCenterTagResourcesPolicyDeploymentOutput": {
             "type": "string",
