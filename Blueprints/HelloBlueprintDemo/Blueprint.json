@@ -59,7 +59,11 @@
             },
             "RequiredTags": {
                 "type": "object",
-                "value": {
+                "metadata": {
+                    "displayName": "Mandatory Tags [Enforced Governance PolicySet]",
+                    "description": "Mandatory tags to be added to the Resource Groups && Resources as per the obligation of the governance set in the Policy Sets."
+                },
+                "defaultValue": {
                     "CostCenter": "[parameters('CostCenter')]",
                     "Env": "[parameters('Environment')]"
                 }
