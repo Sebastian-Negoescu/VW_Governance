@@ -1,0 +1,59 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {
+        "policyName": "enforce-env-tag-rg",
+        "policyDisplayName": "_*Enforce Env Tag on RGs",
+        "policyDescription": "Enforce 'Env' tag on the Resource Groups. Deny any deployments without it."
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policyDefinitions",
+            "apiVersion": "2019-06-01",
+            "name": "[variables('policyName')]",
+            "properties": {
+                "displayName": "[variables('policyDisplayName')]",
+                "description": "[variables('policyDescription')]",
+                "metadata": {
+                    "category": "Tags"
+                },
+                "mode": "All",
+                "policyType": "Custom",
+                "parameters": {
+                    "tagName": {
+                        "type": "string",
+                        "metadata": {
+                            "displayName": "Tag Name",
+                            "description": "The name of your tag."
+                        },
+                        "defaultValue": "Env"
+                    }
+                },
+                "policyRule": {
+                    "if": {
+                        "allOf": [
+                            {
+                                "field": "type",
+                                "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+                            },
+                            {
+                                "field": "[[concat('tags[', parameters('tagName'), ']')]",
+                                "exists": false
+                            }
+                        ]
+                    },
+                    "then": {
+                        "effect": "deny"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "envTagRgPolicyId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Authorization/policyDefinitons', variables('policyName'))]"
+        }
+    }
+}

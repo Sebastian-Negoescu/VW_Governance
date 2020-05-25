@@ -1,0 +1,71 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {
+        "policyName": "enforce-env-tag-resources",
+        "policyDisplayName": "_*Enforce Env Tag on Resources",
+        "policyDescription": "Enforce the 'Env' tag on all Resources - inherit it from the parent Resource Group."
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policyDefinitions",
+            "apiVersion": "2019-06-01",
+            "name": "[variables('policyName')]",
+            "properties": {
+                "displayName": "[variables('policyDisplayName')]",
+                "description": "[variables('policyDescription')]",
+                "metadata": {
+                    "category": "Tags"
+                },
+                "mode": "Indexed",
+                "policyType": "Custom",
+                "parameters": {
+                    "tagName": {
+                        "type": "string",
+                        "metadata": {
+                            "displayName": "Tag Name",
+                            "description": "The name of your tag."
+                        },
+                        "defaultValue": "Env"
+                    }
+                },
+                "policyRule": {
+                    "if": {
+                        "anyOf": [
+                            {
+                                "field": "[[concat('tags[', parameters('tagName'), ']')]",
+                                "exists": false
+                            },
+                            {
+                                "field": "[[concat('tags[', parameters('tagName'), ']')]",
+                                "notEquals": "[[concat('resourceGroup().tags[', parameters('tagName'), ']')]"
+                            }
+                        ]
+                    },
+                    "then": {
+                        "effect": "modify",
+                        "details": {
+                            "roleDefinitionIds": [
+                                "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                            ],
+                            "operations": [
+                                {
+                                    "operation": "addOrReplace",
+                                    "field": "[[concat('tags[', parameters('tagName'), ']')]",
+                                    "value": "[[concat('resourceGroup().tags[', parameters('tagName'), ']')]"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "envTagResourcesPolicyId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Authorization/policyDefinitions', variables('policyName'))]"
+        }
+    }
+}
