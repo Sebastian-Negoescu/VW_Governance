@@ -53,5 +53,11 @@
                 }
             }
         }
-    ]
+    ],
+    "outputs": {
+        "costCenterTagResourcesPolicyId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Authorization/policyDefinitions', variables('policyName'))]"
+        }
+    }
 }
