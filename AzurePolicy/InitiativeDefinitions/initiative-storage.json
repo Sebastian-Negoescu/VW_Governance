@@ -43,6 +43,10 @@
                                 "value": "[[parameters('allowedSkus')]"
                             }
                         }
+                    },
+                    {
+                        "policyDefinitionId": "[resourceId('Microsoft.Authorization/policyDefinitions', 'storage-accounts-https-only')]",
+                        "parameters": {}
                     }
                 ]
             }

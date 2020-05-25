@@ -21,6 +21,7 @@
 
             // Storage
             "storageAccountsAllowedSkusPolicy": "/PolicyDefinitions/policy-storage-account-skus--deny.json",
+            "storageAccountsHttpsOnlyPolicy": "/PolicyDefinitions/policy-storage-https-only--deny",
 
             // Initiative Definitions
 
@@ -74,6 +75,18 @@
                 }
             }
         },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "storageAccountsHttpsOnlyPolicyDeployment",
+            "location": "[parameters('location')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('templateBaseUrl'), variables('childTemplates').storageAccountsHttpsOnlyPolicy)]"
+                }
+            }
+        },
         // Initiative Deployments
         // General
         {
@@ -105,7 +118,11 @@
                     "uri": "[concat(variables('templateBaseUrl'), variables('childTemplates').storageInitiative)]",
                     "contentVersion": "1.0.0.0"
                 }
-            }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'storageAccountsAllowedSkusPolicyDeployment')]",
+                "[resourceId('Microsoft.Resources/deployments', 'storageAccountsHttpsOnlyPolicyDeployment')]"
+            ]
         }
     ],
     "outputs": {
@@ -124,6 +141,10 @@
         "storageAccountsAllowedSkusPolicyIdDeploymentOutput": {
             "type": "string",
             "value": "[reference('storageAccountsAllowedSkusPolicyDeployment').outputs.storageAccountsAllowedSkusPolicyId.value]"
+        },
+        "storageAccountsHttpsOnlyPolicyDeploymentOutput": {
+            "type": "string",
+            "value": "[reference('storageAccountsHttpsOnlyPolicyDeployment').outputs.storageAccountsHttpsOnlyPolicyId.value]"
         },
         "storageInitiativeIdDeploymentOutput": {
             "type": "string",
