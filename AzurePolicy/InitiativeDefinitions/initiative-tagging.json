@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {
+        "initiativeName": "tagging-initiative",
+        "initiativeDisplayName": "_*Tagging Policy Set",
+        "initiativeDescription": "This initiative is a collection of Tagging related policies."
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policySetDefinitions",
+            "apiVersion": "2019-06-01",
+            "name": "[variables('initiativeName')]",
+            "properties": {
+                "displayName": "[variables('initiativeDisplayName')]",
+                "description": "[variables('initiativeDescription')]",
+                "metadata": {
+                    "category": "Tags"
+                },
+                "policyType": "Custom",
+                "parameters": {},
+                "policyDefinitions": [
+                    {
+                        "policyDefinitionId": "[resourceId('Microsoft.Authorization/policyDefinitions', 'enforce-cost-center-tag-rg')]",
+                        "parameters": {}
+                    },
+                    {
+                        "policyDefinitionId": "[resourceId('Microsoft.Authorization/policyDefinitions', 'enforce-cost-center-tag-resources')]",
+                        "parameters": {}
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {
+        "taggingInitiativeId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('initiativeName'))]"
+        }
+    }
+}

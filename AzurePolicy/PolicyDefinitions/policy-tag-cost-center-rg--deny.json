@@ -1,0 +1,54 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {
+        "policyName": "enforce-cost-center-tag-rg",
+        "policyDisplayName": "_*Enforce Cost Center Tag on RGs",
+        "policyDescription": "Enforce the 'Cost Center' Tag on the Resource Groups. Deny any deployments without it."
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policyDefinitions",
+            "apiVersion": "2019-06-01",
+            "name": "[variables('policyName')]",
+            "properties": {
+                "displayName": "[variables('policyDisplayName')]",
+                "description": "[variables('policyDescription')]",
+                "metadata": {
+                    "category": "Tags"
+                },
+                "mode": "All",
+                "policyType": "Custom",
+                "parameters": {
+                    "tagName": {
+                        "type": "string",
+                        "metadata": {
+                            "displayName": "Tag Name",
+                            "description": "Name of the tag"
+                        },
+                        "defaultValue": "CostCenter"
+                    }
+                },
+                "policyRule": {
+                    "if": {
+                        "allOf": [
+                            {
+                                "field": "type",
+                                "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+                            },
+                            {
+                                "field": "[[concat('tags[', parameters('tagName'), ']')]",
+                                "exists": false
+                            }
+                        ]
+                    },
+                    "then": {
+                        "effect": "deny"
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {}
+}
