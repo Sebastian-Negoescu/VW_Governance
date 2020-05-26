@@ -1,5 +1,6 @@
 {
     "kind": "template",
+    "name": "storageAccount",
     "properties": {
         "displayName": "Deploy Storage Account",
         "description": "Deploy Storage Account for Application's static file storage.",
