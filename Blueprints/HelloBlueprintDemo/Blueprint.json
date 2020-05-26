@@ -56,17 +56,6 @@
                     "description": "Prefix to be used for naming convention."
                 },
                 "defaultValue": "[concat(parameters('Organization_Name'), '-', parameters('Environment'))]"
-            },
-            "RequiredTags": {
-                "type": "object",
-                "metadata": {
-                    "displayName": "Mandatory Tags [Enforced Governance PolicySet]",
-                    "description": "Mandatory tags to be added to the Resource Groups && Resources as per the obligation of the governance set in the Policy Sets."
-                },
-                "defaultValue": {
-                    "CostCenter": "[parameters('CostCenter')]",
-                    "Env": "[parameters('Environment')]"
-                }
             }
         },
         "resourceGroups": {
@@ -77,7 +66,10 @@
                     "displayName": "Resource Group for Networks"
                 },
                 "dependsOn": [],
-                "tags": "[parameters('RequiredTags')]"
+                "tags": {
+                    "CostCenter": "[parameters('CostCenter')]",
+                    "Env": "[parameters('Environment')]"
+                }
             },
             "Application-RG": {
                 "name": "[concat(parameters('Prefix'), '-Application-RG')]",
@@ -85,7 +77,10 @@
                 "metadata": {
                     "displayName": "Resource Group for Application"
                 },
-                "tags": "[parameters('RequiredTags')]"
+                "tags": {
+                    "CostCenter": "[parameters('CostCenter')]",
+                    "Env": "[parameters('Environment')]"
+                }
             },
             "Security-RG": {
                 "name": "[concat(parameters('Prefix'), '-Security-RG')]",
@@ -93,7 +88,10 @@
                 "metadata": {
                     "displayName": "Resource Group for Security"
                 },
-                "tags": "[parameters('RequiredTags')]"
+                "tags": {
+                    "CostCenter": "[parameters('CostCenter')]",
+                    "Env": "[parameters('Environment')]"
+                }
             },
             "Storage-RG": {
                 "name": "[concat(parameters('Prefix'), '-Storage-RG')]",
@@ -101,7 +99,10 @@
                 "metadata": {
                     "displayName": "Resource Group for Storage"
                 },
-                "tags": "[parameters('RequiredTags')]"
+                "tags": {
+                    "CostCenter": "[parameters('CostCenter')]",
+                    "Env": "[parameters('Environment')]"
+                }
             }
         }
     }
