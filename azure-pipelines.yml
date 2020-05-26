@@ -1,0 +1,42 @@
+# Testing the Azure Pipeline logic in the following order:
+# 1. Get the Appropriate variables like BlueprintsPath, BlueprintName, etc.
+# 2. Save the new blueprint as Draft (Import-AzBlueprintWithArtifacts)
+# 3. Publish the Blueprint as a *.TEST version since we do NOT know if everything will work as expected
+# 4. Assign the Blueprint to a Test Environment
+# 5. If everything works as expected (Assignment's provisioning status is Successful) -> Publish the Blueprint as *.STABLE version
+
+trigger:
+  - master
+
+variables:
+  subscription: "http://AzureDevOps"
+  location: "westeurope"
+  blueprintsPath: "$(System.DefaultWorkingDirectory)/Blueprints/"
+  blueprintName: "HelloBlueprintDemo"
+  testVersion: "$(Build.BuildId).TEST"
+  stableVersion: "$(Build.BuildId).STABLE"
+
+stages:
+  - stage: "Build_Stage"
+    displayName: "BUILD STAGE"
+    pool: "Default"
+    jobs:
+      - job: "Clean_Workspace"
+        displayName: "Clean Workspace"
+        workspace:
+          clean: "all"
+      - job: "EnsureCode"
+        displayName: "Ensure Code at Location"
+        steps:
+          - task: PowerShell@2
+            name: "List_Items"
+            displayName: "List Child Items"
+            inputs:
+              targetType: "inline"
+              script: |
+                Write-Host "Current Location is: $(Get-Location)"
+                Write-Host "WorkDir Location is: " $env:SYSTEM_DEFAULTWORKINGDIRECTORY
+                Write-Host "Blueprints Path is :" $env:blueprintsPath
+                Write-Host "Blueprint's Name is: " $env:blueprintName
+                Get-ChildItem $env:blueprintsPath
+            
