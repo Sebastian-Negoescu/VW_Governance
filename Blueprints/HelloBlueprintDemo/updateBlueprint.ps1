@@ -46,7 +46,8 @@ IDK just an idea
 #>
 If ($?) {
     Write-Host "Publishing the Blueprint as version $bpNewVersion" -ForegroundColor "DarkYellow"
-    Publish-AzBlueprint -Blueprint $blueprint -Version $bpNewVersion
+    $changeNotes = Read-Host "Changes in the new version of the Blueprint..."
+    Publish-AzBlueprint -Blueprint $blueprint -Version $bpNewVersion -ChangeNote $changeNotes
     
     $org = Read-Host "Name of your organization..."
     $newOrUpdate = Read-Host "Is this a new assignment?"
