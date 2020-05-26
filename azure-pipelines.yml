@@ -27,6 +27,7 @@ stages:
           clean: "all"
       - job: "EnsureCode"
         displayName: "Ensure Code at Location"
+        dependsOn: "Clean_Workspace"
         steps:
           - task: PowerShell@2
             name: "List_Items"
@@ -35,8 +36,8 @@ stages:
               targetType: "inline"
               script: |
                 Write-Host "Current Location is: $(Get-Location)"
-                Write-Host "WorkDir Location is: " $env:SYSTEM_DEFAULTWORKINGDIRECTORY
-                Write-Host "Blueprints Path is :" $env:blueprintsPath
-                Write-Host "Blueprint's Name is: " $env:blueprintName
-                Get-ChildItem $env:blueprintsPath
+                Write-Host "WorkDir Location is: " $(System.DefaultWorkingDirectory)
+                Write-Host "Blueprints Path is: $(blueprintsPath)"
+                Write-Host "Blueprint's Name is: $(blueprintName)"
+                Get-ChildItem $(blueprintsPath)
             
