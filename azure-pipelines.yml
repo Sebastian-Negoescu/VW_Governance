@@ -127,7 +127,7 @@ stages:
               azurePowerShellVersion: "LatestVersion"
               ScriptType: "InlineScript"
               Inline: |
-                $bpNewVersion_TEST = $(vsoBpNewVersion) + "_TEST"
+                $bpNewVersion_TEST = [String]$(vsoBpNewVersion) + "_TEST"
                 Publish-AzBlueprint -Blueprint $(vsoAzBlueprint) -Version $bpNewVersion_TEST
           - task: AzurePowerShell@5
             name: "AzBlueprint_AssignTEST"
