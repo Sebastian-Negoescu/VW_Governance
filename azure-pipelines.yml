@@ -9,7 +9,7 @@ trigger:
   - master
 
 variables:
-  azConnection: "http://AzureDevOps"
+  azConnection: "http://AzDevOps"
   azSubscriptionId: "ac658ff9-95d0-4719-9f1f-58c5554960c9"
   location: "westeurope"
   blueprintsPath: "$(System.DefaultWorkingDirectory)/Blueprints/"
