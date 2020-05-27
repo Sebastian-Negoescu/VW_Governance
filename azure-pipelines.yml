@@ -78,7 +78,8 @@ stages:
                 ###################################################################################################
 
                 $azBlueprint = Get-AzBlueprint -Name $(blueprintName) -SubscriptionId $(azSubscriptionId)
-                $bpLastVersion = [Double] $azBlueprint.Versions[$azBlueprint.Versions.Length-1]
+                $preConversionVersion = $azBlueprint.Versions[$azBlueprint.Versions.Length-1]
+                $bpLastVersion = [Double]$preConversionVersion.Split("_")[0]
                 $bpNewVersion = $bpLastVersion + 0.1
                 Write-Host "Azure Blueprint Details" -ForegroundColor DarkCyan
                 Write-Host "Blueprint's Name: $(blueprintName)" -ForegroundColor DarkCyan
