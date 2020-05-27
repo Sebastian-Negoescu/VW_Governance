@@ -9,7 +9,8 @@ trigger:
   - master
 
 variables:
-  subscription: "http://AzureDevOps"
+  azConnection: "http://AzureDevOps"
+  azSubscriptionId: "ac658ff9-95d0-4719-9f1f-58c5554960c9"
   location: "westeurope"
   blueprintsPath: "$(System.DefaultWorkingDirectory)/Blueprints/"
   blueprintName: "HelloBlueprintDemo"
@@ -25,9 +26,9 @@ stages:
         displayName: "Clean Workspace"
         workspace:
           clean: "all"
-      - job: "EnsureCode"
-        displayName: "Ensure Code at Location"
-        dependsOn: "Clean_Workspace"
+      - job: "Build_Blueprint"
+        displayName: "Build Blueprint"
+        # dependsOn: "Clean_Workspace"
         steps:
           - task: PowerShell@2
             name: "List_Items"
@@ -38,6 +39,45 @@ stages:
                 Write-Host "Current Location is: $(Get-Location)"
                 Write-Host "WorkDir Location is: " $(System.DefaultWorkingDirectory)
                 Write-Host "Blueprints Path is: $(blueprintsPath)"
-                Write-Host "Blueprint's Name is: $(blueprintName)"
                 Get-ChildItem $(blueprintsPath)
-            
+          - task: PowerShell@2
+            name: "Check_AzBlueprint"
+            displayName: "Verify/Install AzBlueprints Module"
+            inputs:
+              targetType: "inline"
+              script: |
+                Write-Host "Current PowerShell Version is: " $PSVersionTable.PSVersion
+                $azModuleExists = Get-Module -ListAvailable | Where-Object Name -like "Az"
+                If ($null -ne $azModuleExists) {
+                  Write-Host "AzModule exists already. Value is: $azModuleExists version $($azModuleExists.Version)"
+                  $bpModuleExists = Get-Module -ListAvailable | Where-Object Name -like "*Blueprint"
+                  If ($null -ne $bpModuleExists) {
+                    Write-Host "$($bpModuleExists.Name) Module exists already. Continue pipeline..."
+                  } Else {
+                    Write-Host "Az.Blueprint Module does not exist. Let's install it..."
+                    Install-Module -Name "Az.Blueprint" -AllowClobber
+                    Write-Host "Successfully installed Az.Blueprint Module."
+                  }
+                } Else {
+                  Write-Host "AzModule does not exist... Let's install it firstly."
+                  Install-Module -Name Az -AllowClobber
+                  Install-Module -Name Az.Blueprint -AllowClobber
+                  Write-Host "Successfully installed Az Module and Az.Blueprint Module"
+                }
+          - task: AzurePowershell@5
+            name: "PrintBuildInfo"
+            displayName: "Print Build Information"
+            inputs:
+              azureSubscription: $(azConnection)
+              azurePowerShellVersion: "LatestVersion"
+              ScriptType: "InlineScript"
+              Inline: |
+                $azBlueprint = Get-AzBlueprint -Name $(blueprintName) -SubscriptionId $(azSubscriptionId)
+                $bpLastVersion = [Double] $azBlueprint.Versions[$azBlueprint.Versions.Length-1]
+                Write-Host "Azure Blueprint Details" -ForegroundColor DarkCyan
+                Write-Host "Blueprint's Name: $(blueprintName)" -ForegroundColor DarkCyan
+                Write-Host "Blueprint's Target: Subscription with ID $(azSubscriptionId)" -ForegroundColor DarkCyan
+                $bpCodeDir = "$(blueprintsPath)" + "$(blueprintName)"
+                Write-Host "Blueprint's Code Directory: $(bpCodeDir)" -ForegroundColor DarkCyan
+                Write-Host "Blueprint's Last Version: $bpLastVersion" -ForegroundColor DarkCyan
+                Write-Host "Blueprint's New Version: $bpNewVersion" -ForegroundColor DarkCyan
