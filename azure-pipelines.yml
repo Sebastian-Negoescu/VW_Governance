@@ -63,6 +63,7 @@ stages:
                   Write-Host "AzModule does not exist... Let's install it firstly."
                   Install-Module -Name Az -AllowClobber
                   Install-Module -Name Az.Blueprint -AllowClobber
+                  Import-Module -Name Az.Blueprint
                   Write-Host "Successfully installed Az Module and Az.Blueprint Module"
                 }
           - task: AzurePowershell@5
@@ -75,10 +76,11 @@ stages:
               Inline: |
                 $azBlueprint = Get-AzBlueprint -Name $(blueprintName) -SubscriptionId $(azSubscriptionId)
                 $bpLastVersion = [Double] $azBlueprint.Versions[$azBlueprint.Versions.Length-1]
+                $bpNewVersion = $bpLastVersion + 0.1
                 Write-Host "Azure Blueprint Details" -ForegroundColor DarkCyan
                 Write-Host "Blueprint's Name: $(blueprintName)" -ForegroundColor DarkCyan
                 Write-Host "Blueprint's Target: Subscription with ID $(azSubscriptionId)" -ForegroundColor DarkCyan
                 $bpCodeDir = "$(blueprintsPath)" + "$(blueprintName)"
-                Write-Host "Blueprint's Code Directory: $(bpCodeDir)" -ForegroundColor DarkCyan
+                Write-Host "Blueprint's Code Directory: $bpCodeDir" -ForegroundColor DarkCyan
                 Write-Host "Blueprint's Last Version: $bpLastVersion" -ForegroundColor DarkCyan
                 Write-Host "Blueprint's New Version: $bpNewVersion" -ForegroundColor DarkCyan
