@@ -93,7 +93,7 @@ stages:
                 Write-Host "##vso[task.setvariable variable=AZBLUEPRINT;]$azBlueprint"
                 Write-Host "##vso[task.setvariable variable=BPLASTVERSION;]$bpLastVersion"
                 Write-Host "##vso[task.setvariable variable=BPNEWVERSION;]$bpNewVersion"
-                Write-Hpst "##vso[task.setvariable variable=BPCODEDIR;]$bpCodeDir"
+                Write-Host "##vso[task.setvariable variable=BPCODEDIR;]$bpCodeDir"
 
           - task: AzurePowerShell@5
             name: "AzBlueprint_SaveDraft"
