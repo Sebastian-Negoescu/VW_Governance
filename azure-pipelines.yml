@@ -55,7 +55,8 @@ stages:
                     Write-Host "$($bpModuleExists.Name) Module exists already. Continue pipeline..."
                   } Else {
                     Write-Host "Az.Blueprint Module does not exist. Let's install it..."
-                    Install-Module -Name "Az.Blueprint" -AllowClobber
+                    Install-Module -Name "Az.Blueprint" -AllowClobber -Force
+                    Import-Module -Name "Az.Blueprint"
                     Write-Host "Successfully installed Az.Blueprint Module."
                   }
                 } Else {
