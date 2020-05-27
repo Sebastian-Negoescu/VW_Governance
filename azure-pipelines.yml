@@ -107,7 +107,7 @@ stages:
                   Import-AzBlueprintWithArtifact -Name $(blueprintName) -SubscriptionId $(azSubscriptionId) -InputPath $(Set_BuildInfo.BPCODEDIR) -Force -Confirm:$false
                   Write-Host "Blueprint Draft saved successfully."
                 } Else {
-                  Break
+                  Write-Host "Check your draft - an error occurred."
                 }
 
       - job: "Publish_TEST"
@@ -127,8 +127,9 @@ stages:
               azurePowerShellVersion: "LatestVersion"
               ScriptType: "InlineScript"
               Inline: |
+                $azBlueprint = Get-AzBlueprint -Name $(blueprintName) -SubscriptionId $(azSubscriptionId)
                 $bpNewVersion_TEST = [String]$(vsoBpNewVersion) + "_TEST"
-                Publish-AzBlueprint -Blueprint $(vsoAzBlueprint) -Version $bpNewVersion_TEST
+                Publish-AzBlueprint -Blueprint $azBlueprint -Version $bpNewVersion_TEST
           - task: AzurePowerShell@5
             name: "AzBlueprint_AssignTEST"
             displayName: "AzBlueprint - Assign TEST"
