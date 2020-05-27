@@ -67,13 +67,17 @@ stages:
                   Write-Host "Successfully installed Az Module and Az.Blueprint Module"
                 }
           - task: AzurePowershell@5
-            name: "PrintBuildInfo"
-            displayName: "Print Build Information"
+            name: "Set_BuildInfo"
+            displayName: "Set Build Information"
             inputs:
               azureSubscription: $(azConnection)
               azurePowerShellVersion: "LatestVersion"
               ScriptType: "InlineScript"
               Inline: |
+                ###################################################################################################
+                ############################# SET AZ BLUEPRINT FACTS FOR BUILD PURPOSES ###########################
+                ###################################################################################################
+
                 $azBlueprint = Get-AzBlueprint -Name $(blueprintName) -SubscriptionId $(azSubscriptionId)
                 $bpLastVersion = [Double] $azBlueprint.Versions[$azBlueprint.Versions.Length-1]
                 $bpNewVersion = $bpLastVersion + 0.1
@@ -84,3 +88,19 @@ stages:
                 Write-Host "Blueprint's Code Directory: $bpCodeDir" -ForegroundColor DarkCyan
                 Write-Host "Blueprint's Last Version: $bpLastVersion" -ForegroundColor DarkCyan
                 Write-Host "Blueprint's New Version: $bpNewVersion" -ForegroundColor DarkCyan
+
+                Write-Host "Converting the variables to Azure DevOps ENV Vars"
+                Write-Host "##vso[task.setvariable variable=AZBLUEPRINT;]$azBlueprint"
+                Write-Host "##vso[task.setvariable variable=BPLASTVERSION;]$bpLastVersion"
+                Write-Host "##vso[task.setvariable variable=BPNEWVERSION;]$bpNewVersion"
+                Write-Hpst "##vso[task.setvariable variable=BPCODEDIR;]$bpCodeDir"
+
+          - task: AzurePowerShell@5
+            name: "AzBlueprint_SaveDraft"
+            displayName: "AzBlueprint - DRAFT"
+            inputs:
+              azureSubscription: $(azConnection)
+              azurePowerShellVersion: "LatestVersion"
+              ScriptType: "InlineScript"
+              Inline: |
+                Import-AzBlueprintWithArtifact -Name $(blueprintName) -SubscriptionId $(azSubscriptionId) -InputPath $env:BPCODEDIR -Force -Confirm:$false -ErrorVariable $errr
