@@ -14,8 +14,7 @@ variables:
   location: "westeurope"
   blueprintsPath: "$(System.DefaultWorkingDirectory)/Blueprints/"
   blueprintName: "HelloBlueprintDemo"
-  testVersion: "$(Build.BuildId).TEST"
-  stableVersion: "$(Build.BuildId).STABLE"
+  organization: "Ostroveni"
 
 stages:
   - stage: "Build_Stage"
@@ -90,10 +89,10 @@ stages:
                 Write-Host "Blueprint's New Version: $bpNewVersion" -ForegroundColor DarkCyan
 
                 Write-Host "Converting the variables to Azure DevOps ENV Vars"
-                Write-Host "##vso[task.setvariable variable=AZBLUEPRINT;]$azBlueprint"
-                Write-Host "##vso[task.setvariable variable=BPLASTVERSION;]$bpLastVersion"
-                Write-Host "##vso[task.setvariable variable=BPNEWVERSION;]$bpNewVersion"
-                Write-Host "##vso[task.setvariable variable=BPCODEDIR;]$bpCodeDir"
+                Write-Host "##vso[task.setvariable variable=AZBLUEPRINT;isOutput=true]$azBlueprint"
+                Write-Host "##vso[task.setvariable variable=BPLASTVERSION;isOutput=true]$bpLastVersion"
+                Write-Host "##vso[task.setvariable variable=BPNEWVERSION;isOutput=true]$bpNewVersion"
+                Write-Host "##vso[task.setvariable variable=BPCODEDIR;isOutput=true]$bpCodeDir"
 
           - task: AzurePowerShell@5
             name: "AzBlueprint_SaveDraft"
@@ -103,4 +102,40 @@ stages:
               azurePowerShellVersion: "LatestVersion"
               ScriptType: "InlineScript"
               Inline: |
-                Import-AzBlueprintWithArtifact -Name $(blueprintName) -SubscriptionId $(azSubscriptionId) -InputPath $env:BPCODEDIR -Force -Confirm:$false -ErrorVariable $errr
+                $azBlueprintDraft = Import-AzBlueprintWithArtifact -Name $(blueprintName) -SubscriptionId $(azSubscriptionId) -InputPath $(Set_BuildInfo.BPCODEDIR) -Force -Confirm:$false -WhatIf
+                If ($azBlueprintDraft -eq $null) {
+                  Import-AzBlueprintWithArtifact -Name $(blueprintName) -SubscriptionId $(azSubscriptionId) -InputPath $(Set_BuildInfo.BPCODEDIR) -Force -Confirm:$false
+                  Write-Host "Blueprint Draft saved successfully."
+                } Else {
+                  Break
+                }
+
+      - job: "Publish_TEST"
+        displayName: "Publish TEST"
+        dependsOn: "Build_Blueprint"
+        variables:
+          vsoAzBlueprint: $[ dependencies.Build_Blueprint.outputs['Set_BuildInfo.AZBLUEPRINT'] ]
+          vsoBpLastVersion: $[ dependencies.Build_Blueprint.outputs['Set_BuildInfo.BPLASTVERSION'] ]
+          vsoBpNewVersion: $[ dependencies.Build_Blueprint.outputs['Set_BuildInfo.BPNEWVERSION'] ]
+          vsoBpCodeDir: $[ dependencies.Build_Blueprint.outputs['Set_BuildInfo.BPCODEDIR'] ]
+        steps:
+          - task: AzurePowerShell@5
+            name: "AzBlueprint_PublishTEST"
+            displayName: "AzBlueprint - Publish TEST"
+            inputs:
+              azureSubscription: $(azConnection)
+              azurePowerShellVersion: "LatestVersion"
+              ScriptType: "InlineScript"
+              Inline: |
+                $bpNewVersion_TEST = $(vsoBpNewVersion) + "_TEST"
+                Publish-AzBlueprint -Blueprint $(vsoAzBlueprint) -Version $bpNewVersion_TEST
+          - task: AzurePowerShell@5
+            name: "AzBlueprint_AssignTEST"
+            displayName: "AzBlueprint - Assign TEST"
+            inputs:
+              azureSubscription: $(azConnection)
+              azurePowerShellVersion: "LatestVersion"
+              ScriptType: "InlineScript"
+              Inline: |
+                Write-Host "Successfully got here... :))))"
+                Write-Host "Now, think of a method to override params in assignment file OR just create a new TEST assignment purpose file"
