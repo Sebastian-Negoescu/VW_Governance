@@ -17,10 +17,13 @@
                 },
                 "Location": {
                     "type": "string"
+                },
+                "Release": {
+                    "type": "string"
                 }
             },
             "variables": {
-                "stgAcctName": "[toLower(concat(parameters('Organization_Name'), parameters('Environment'), 'stgacct'))]"
+                "stgAcctName": "[toLower(concat(parameters('Release'), parameters('Organization_Name'), parameters('Environment'), 'stgacct'))]"
             },
             "resources": [
                 {
@@ -48,6 +51,9 @@
             },
             "Location": {
                 "value": "[parameters('Azure_Region')]"
+            },
+            "Release": {
+                "value": "[parameters('Release')]"
             }
         }
     }

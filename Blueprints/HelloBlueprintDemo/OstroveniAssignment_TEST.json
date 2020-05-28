@@ -31,13 +31,13 @@
                 "value": "westeurope"
             },
             "Environment": {
-                "value": "PROD"
+                "value": "DEV"
             },
             "CostCenter": {
                 "value": "Sebi Negoescu"
             },
             "Release": {
-                "value": "STABLE"
+                "value": "TEST"
             }
         }
     }
