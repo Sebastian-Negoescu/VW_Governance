@@ -49,24 +49,13 @@
                     "description": "The tags required by the Azure Policy Governance enforcement."
                 }
             },
-            "Release": {
-                "type": "string",
-                "metadata": {
-                    "displayName": "Release Version",
-                    "description": "Release version for deployment purposes."
-                },
-                "allowedValues": [
-                    "TEST",
-                    "STABLE"
-                ]
-            },
             "Prefix": {
                 "type": "string",
                 "metadata": {
                     "displayName": "Naming Prefix",
                     "description": "Prefix to be used for naming convention."
                 },
-                "defaultValue": "[concat(parameters('Release'), parameters('Organization_Name'), '-', parameters('Environment'))]"
+                "defaultValue": "[concat(parameters('Organization_Name'), '-', parameters('Environment'))]"
             }
         },
         "resourceGroups": {

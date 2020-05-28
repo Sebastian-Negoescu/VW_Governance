@@ -35,9 +35,6 @@
             },
             "CostCenter": {
                 "value": "Sebi Negoescu"
-            },
-            "Release": {
-                "value": "STABLE"
             }
         }
     }
