@@ -51,7 +51,7 @@
                             ],
                             "operations": [
                                 {
-                                    "operation": "add",
+                                    "operation": "addOrReplace",
                                     "field": "[[concat('tags[', parameters('tagName'), ']')]",
                                     "value": "[[resourceGroup().tags[parameters('tagName')]]"
                                 }
