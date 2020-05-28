@@ -111,7 +111,7 @@ stages:
                   Write-Host "Check your draft - an error occurred."
                 }
 
-      - job: "Publish_TEST"
+      - job: "AzBlueprint_TEST"
         displayName: "Publish TEST"
         dependsOn: "Build_Blueprint"
         variables:
