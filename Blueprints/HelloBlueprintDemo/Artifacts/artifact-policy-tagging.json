@@ -5,5 +5,8 @@
         "dependsOn": [],
         "policyDefinitionId": "/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/providers/Microsoft.Authorization/policySetDefinitions/tagging-initiative",
         "parameters": {}
+    },
+    "identity": {
+        "type": "SystemAssigned"
     }
 }
