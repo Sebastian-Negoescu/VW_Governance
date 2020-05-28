@@ -140,5 +140,6 @@ stages:
               azurePowerShellVersion: "LatestVersion"
               ScriptType: "InlineScript"
               Inline: |
+                $azBlueprint = Get-AzBlueprint -Name $(blueprintName) -SubscriptionId $(azSubscriptionId)
                 $testAssignmentName = "$(blueprintName)-$(organization)Assignment_TEST"
                 New-AzBlueprintAssignment -Name "$testAssignmentName" -Blueprint $azBlueprint -SubscriptionId $(azSubscriptionId) -AssignmentFile "$(vsoBpCodeDir)/$(organization)Assignment_TEST.json"
