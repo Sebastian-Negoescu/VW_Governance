@@ -19,8 +19,10 @@ $targetSubscription = Get-AzSubscription | Where-Object Name -eq "VSEnterprise_D
 $bpName = Read-Host "Name of the Azure Blueprint you want to update..."
 $bpCodeDirectory = (Get-ChildItem -Recurse -Filter "Blueprint.json" | Where-Object FullName -Like "*$bpName*").DirectoryName
 $blueprint = Get-AzBlueprint -Name $bpName -SubscriptionId $targetSubscription.Id
-$bpLastVersion = [Double] $blueprint.Versions[$blueprint.Version.Length-1]
+$preConversionVersion = $blueprint.Versions[$azBlueprint.Versions.Length-1]
+$bpLastVersion = [Double]$preConversionVersion.Split("_")[0]
 $bpNewVersion = $bpLastVersion + 0.1
+$bpNewVersion_TEST = [String]$bpNewVersion + "_TEST"
 
 ##### Show collected information
 Write-Host "Azure Blueprint Details" -ForegroundColor DarkCyan
@@ -28,7 +30,7 @@ Write-Host "Blueprint Name: $bpName" -ForegroundColor DarkCyan
 Write-Host "Blueprint Target: Subscription $($targetSubscription.Name) with ID $($targetSubscription.Id)" -ForegroundColor DarkCyan
 Write-Host "Blueprint Code Directory: $bpCodeDirectory" -ForegroundColor DarkCyan
 Write-Host "Blueprint Last Version: $bpLastVersion" -ForegroundColor DarkCyan
-Write-Host "Blueprint New Version: $bpNewVersion" -ForegroundColor DarkCyan
+Write-Host "Blueprint New Version: $bpNewVersion_TEST" -ForegroundColor DarkCyan
 
 ##### Save the new Definition, Publish it as a new version and update the Assignment
 Write-Host "Step 3 - Save Draft | Publish New Version | Update Assignment" -ForegroundColor "DarkYellow"
@@ -45,16 +47,16 @@ If "yes" > create a new BP > add the organization name to already existing array
 IDK just an idea
 #>
 If ($?) {
-    Write-Host "Publishing the Blueprint as version $bpNewVersion" -ForegroundColor "DarkYellow"
+    Write-Host "Publishing the Blueprint as version $bpNewVersion_TEST" -ForegroundColor "DarkYellow"
     $changeNotes = Read-Host "Changes in the new version of the Blueprint..."
-    Publish-AzBlueprint -Blueprint $blueprint -Version $bpNewVersion -ChangeNote $changeNotes
+    Publish-AzBlueprint -Blueprint $blueprint -Version $bpNewVersion_TEST -ChangeNote $changeNotes
     
     $org = Read-Host "Name of your organization..."
     $newOrUpdate = Read-Host "Is this a new assignment?"
     If (($newOrUpdate -eq "Yes") -or ($newOrUpdate -eq "yes")) {
         If (($org -eq "Ostroveni") -or ($org -eq "TunariiVechi")) {
             Write-Host "Let's create the Blueprint Assignment first..." -ForegroundColor "DarkCyan"
-            $updatedBlueprint = Get-AzBlueprint -Name $bpName -SubscriptionId $targetSubscription.Id -Version $bpNewVersion
+            $updatedBlueprint = Get-AzBlueprint -Name $bpName -SubscriptionId $targetSubscription.Id -Version $bpNewVersion_TEST
             $assignmentFile = "$bpCodeDirectory/$($org)Assignment.json"
             New-AzBlueprintAssignment -Name "$bpName-$($org)Assignment" -SubscriptionId $targetSubscription.Id -Blueprint $updatedBlueprint -AssignmentFile $assignmentFile
         } Else {
@@ -63,7 +65,7 @@ If ($?) {
     } Else {
         If (($org -eq "Ostroveni") -or ($org -eq "TunariiVechi")) {
             Write-Host "Update Blueprint Assignment for Organization $org" -ForegroundColor "DarkYellow"
-            $updatedBlueprint = Get-AzBlueprint -Name $bpName -SubscriptionId $targetSubscription.Id -Version $bpNewVersion
+            $updatedBlueprint = Get-AzBlueprint -Name $bpName -SubscriptionId $targetSubscription.Id -Version $bpNewVersion_TEST
             $assignmentFile = "$bpCodeDirectory/$($org)Assignment.json"
             Set-AzBlueprintAssignment -Name "$bpName-$($org)Assignment" -SubscriptionId $targetSubscription.Id -Blueprint $updatedBlueprint -AssignmentFile $assignmentFile
         } Else {
@@ -73,3 +75,4 @@ If ($?) {
 } Else {
     Write-Host "Received Error: $errr"
 }
+
