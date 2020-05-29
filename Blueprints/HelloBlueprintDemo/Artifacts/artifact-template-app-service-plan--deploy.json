@@ -1,0 +1,59 @@
+{
+    "kind": "template",
+    "name": "appServicePlan",
+    "properties": {
+        "displayName": "App Service Plan",
+        "description": "App Service Plan that will host the Linux Application",
+        "dependsOn": {},
+        "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "Prefix": {
+                    "type": "string"
+                },
+                "Location": {
+                    "type": "string"
+                }
+            },
+            "variables": {
+                "aspName": "[concat(parameters('Prefix'), '-ASP')]",
+                "aspSkuTier": "Standard",
+                "aspSkuName": "S1"
+            },
+            "resources": [
+                {
+                    "type": "Microsoft.Web/serverFarms",
+                    "apiVersion": "2019-08-01",
+                    "name": "[variables('aspName')]",
+                    "location": "[parameters('Location')]",
+                    "kind": "linux",
+                    "sku": {
+                        "Tier": "[variables('aspSkuTier')]",
+                        "Name": "[variables('aspSkuName')]"
+                    },
+                    "properties": {
+                        "name": "[variables('aspName')]",
+                        "reserved": true,
+                        "numberOfWorkers": 1
+                    }
+                }
+            ],
+            "outputs": {
+                "aspId": {
+                    "type": "string",
+                    "value": "[resourceId('Microsoft.Web/serverFarms', variables('aspName'))]"
+                }
+            }
+        },
+        "resourceGroup": "Application-RG",
+        "parameters": {
+            "Prefix": {
+                "value": "[parameters('Prefix')]"
+            },
+            "Location": {
+                "value": "[parameters('Azure_Region')]"
+            }
+        }
+    }
+}
