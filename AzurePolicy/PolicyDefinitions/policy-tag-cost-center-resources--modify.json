@@ -14,31 +14,32 @@
             "name": "[variables('policyName')]",
             "properties": {
                 "displayName": "[variables('policyDisplayName')]",
+                "policyType": "Custom",
+                "mode": "Indexed",
                 "description": "[variables('policyDescription')]",
                 "metadata": {
+                    "version": "1.0.0",
                     "category": "Tags"
                 },
-                "mode": "Indexed",
-                "policyType": "Custom",
                 "parameters": {
                     "tagName": {
-                        "type": "string",
+                        "type": "String",
                         "metadata": {
                             "displayName": "Tag Name",
-                            "description": "The name of the tag"
+                            "description": "Name of the tag, such as 'environment'"
                         },
                         "defaultValue": "CostCenter"
-                    }
+                }
                 },
                 "policyRule": {
                     "if": {
                         "allOf": [
                             {
                                 "field": "[[concat('tags[', parameters('tagName'), ']')]",
-                                "notEquals": "[[resourceGroup().tags[parameters('tagName')]]"
+                                "exists": "false"
                             },
                             {
-                                "field": "[[resourceGroup().tags[parameters('tagName')]]",
+                                "value": "[[resourceGroup().tags[parameters('tagName')]]",
                                 "notEquals": ""
                             }
                         ]
@@ -51,7 +52,7 @@
                             ],
                             "operations": [
                                 {
-                                    "operation": "addOrReplace",
+                                    "operation": "add",
                                     "field": "[[concat('tags[', parameters('tagName'), ']')]",
                                     "value": "[[resourceGroup().tags[parameters('tagName')]]"
                                 }
