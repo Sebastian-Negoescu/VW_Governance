@@ -55,7 +55,7 @@
                     "displayName": "Naming Prefix",
                     "description": "Prefix to be used for naming convention."
                 },
-                "defaultValue": "[concat(parameters('Organization_Name'), '-', parameters('Environment'))]"
+                "defaultValue": "[concat(parameters('Environment'), '-', parameters('Organization_Name'))]"
             }
         },
         "resourceGroups": {
@@ -68,7 +68,7 @@
                 "dependsOn": [],
                 "tags": {
                     "CostCenter": "[parameters('CostCenter')]",
-                    "Env": "[parameters('Environment')]"
+                    "Env": ""
                 }
             },
             "Application-RG": {
@@ -79,7 +79,7 @@
                 },
                 "tags": {
                     "CostCenter": "[parameters('CostCenter')]",
-                    "Env": "[parameters('Environment')]"
+                    "Env": ""
                 }
             },
             "Security-RG": {
@@ -90,7 +90,7 @@
                 },
                 "tags": {
                     "CostCenter": "[parameters('CostCenter')]",
-                    "Env": "[parameters('Environment')]"
+                    "Env": ""
                 }
             },
             "Storage-RG": {
@@ -101,7 +101,7 @@
                 },
                 "tags": {
                     "CostCenter": "[parameters('CostCenter')]",
-                    "Env": "[parameters('Environment')]"
+                    "Env": ""
                 }
             }
         }
