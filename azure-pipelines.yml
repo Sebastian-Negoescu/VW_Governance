@@ -6,7 +6,14 @@
 # 5. If everything works as expected (Assignment's provisioning status is Successful) -> Publish the Blueprint as *.STABLE version
 
 trigger:
-  - master
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - AzurePolicy/*
+    - readme.md
+    - .gitignore
 
 variables:
   azConnection: "http://AzDevOps"
