@@ -18,7 +18,7 @@
                 "metadata": {
                     "category": "Tags"
                 },
-                "mode": "All",
+                "mode": "Indexed",
                 "policyType": "Custom",
                 "parameters": {
                     "tagName": {
