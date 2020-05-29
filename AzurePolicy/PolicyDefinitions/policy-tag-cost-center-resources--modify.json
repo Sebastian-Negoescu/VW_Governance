@@ -35,22 +35,28 @@
                         "allOf": [
                             {
                                 "field": "[[concat('tags[', parameters('tagName'), ']')]",
-                                "exists": false
+                                "notEquals": "[[resourceGroup().tags[parameters('tagName')]]"
                             },
                             {
                                 "field": "[[resourceGroup().tags[parameters('tagName')]]",
-                                "notEquals": "empty"
+                                "notEquals": ""
                             }
                         ]
                     },
                     "then": {
-                        "effect": "append",
-                        "details": [
-                            {
-                                "field": "[[concat('tags[', parameters('tagName'), ']')]",
-                                "value": "[[resourceGroup().tags[parameters('tagName')]]"
-                            }
-                        ]
+                        "effect": "modify",
+                        "details": {
+                            "roleDefinitionIds": [
+                                "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                            ],
+                            "operations": [
+                                {
+                                    "operation": "addOrReplace",
+                                    "field": "[[concat('tags[', parameters('tagName'), ']')]",
+                                    "value": "[[resourceGroup().tags[parameters('tagName')]]"
+                                }
+                            ]
+                        }
                     }
                 }
             }
