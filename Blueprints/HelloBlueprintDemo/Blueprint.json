@@ -1,7 +1,7 @@
 {
     "properties": {
         "displayName": "HelloBlueprintDemo",
-        "description": "Testing my first Blueprint as Code; it should contain firstly the 3 Azure Policy resources: 2 Policy definitions for RG & Resources allowed locations + an initiative formed of the two.",
+        "description": "Testing my first Blueprint as Code; it should contain firstly the 3 Azure Policy resources: 2 Policy definitions for RG & Resources allowed locations + an initiative formed of the two. Implemented through CI/CD in Azure DevOps.",
         "targetScope": "subscription",
         "parameters": {
             "Policy_Allowed-Locations": {
