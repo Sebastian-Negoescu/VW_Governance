@@ -155,7 +155,7 @@ stages:
                 ########################### THEN MAKE THE CONTENT OF THE PARAMETER FILE MATCH IT
 
                 $paramPath = "$(vsoBpCodeDir)/$(organization)AssignmentTest.json"
-                $latestPublishedVersion = Get-AzBlueprint -Name $(blueprintName) -SubscriptionId $(azSubscriptionId) -LatestVersion
+                $latestPublishedVersion = Get-AzBlueprint -Name $(blueprintName) -SubscriptionId $(azSubscriptionId) -LatestPublished
                 $content = Get-Content -Path $paramPath -Raw | ConvertFrom-Json
                 $content.properties | ForEach-Object {
                   If ($_.blueprintId -ne $latestPublishedVersion.Id) {
