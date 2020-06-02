@@ -168,7 +168,7 @@ stages:
                 ########################### IF IT EXISTS ALREADY, THEN UPDATE IT WITH THE TEST VERSION
                 ########################### IF IT DOES NOT, THEN CREATE THE ASSIGNMENT WITH THE LATEST TEST VERSION
                 $testAssignmentName = "$(blueprintName)-$(organization)Assignment_TEST"
-                $existingBp = Get-AzBlueprintAssignment -Name $testAssignmentName -Blueprint $latestPublishedVersion -AssignmentFile $paramPath -SubscriptionId $(azSubscriptionId)
+                $existingBp = Get-AzBlueprintAssignment -Name $testAssignmentName -SubscriptionId $(azSubscriptionId) -ErrorAction "SilentlyContinue"
 
                 If ($existingBp) {
                   Set-AzBlueprintAssignment -Name $testAssignmentName -Blueprint $latestPublishedVersion -AssignmentFile $paramPath -SubscriptionId $(azSubscriptionId)
