@@ -101,7 +101,6 @@ stages:
                 Write-Host "##vso[task.setvariable variable=BPLASTVERSION;isOutput=true]$bpLastVersion"
                 Write-Host "##vso[task.setvariable variable=BPNEWVERSION;isOutput=true]$bpNewVersion"
                 Write-Host "##vso[task.setvariable variable=BPCODEDIR;isOutput=true]$bpCodeDir"
-
           - task: AzurePowerShell@5
             name: "AzBlueprint_SaveDraft"
             displayName: "AzBlueprint - DRAFT"
@@ -117,7 +116,6 @@ stages:
                 } Else {
                   Write-Host "Check your draft - an error occurred."
                 }
-
       - job: "AzBlueprint_TEST"
         displayName: "Publish TEST"
         dependsOn: "Build_Blueprint"
