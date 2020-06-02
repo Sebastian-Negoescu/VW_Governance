@@ -1,7 +1,7 @@
 {
     "kind": "policyAssignment",
     "properties": {
-        "displayName": "[concat(parameters('Enviornment'), '_*Tagging Policy Set - Assignment', parameters('Organization_Name'))]",
+        "displayName": "[concat(parameters('Environment'), '_*Tagging Policy Set - Assignment', parameters('Organization_Name'))]",
         "dependsOn": [],
         "policyDefinitionId": "/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/providers/Microsoft.Authorization/policySetDefinitions/tagging-initiative",
         "parameters": {}
