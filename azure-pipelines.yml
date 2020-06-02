@@ -139,6 +139,60 @@ stages:
                 $bpNewVersion_TEST = [String]$(vsoBpNewVersion) + "_TEST"
                 Publish-AzBlueprint -Blueprint $azBlueprint -Version $bpNewVersion_TEST -ChangeNote "Changes on commitId $($env:BUILD_SOURCEVERSION)"
                 Write-Host "##vso[task.setvariable variable=vsoBpNewVersion_TEST;isOutput=true]$bpNewVersion_TEST"
+          - task: AzurePowerShell@5
+            name: "AzBlueprint_AssignTEST"
+            displayName: "AzBlueprint - Assign TEST"
+            inputs:
+              azureSubscription: $(azConnection)
+              azurePowerShellVersion: "LatestVersion"
+              ScriptType: "InlineScript"
+              Inline: |
+                Write-Host "Assign the TEST version"
+
+                ########################### GET THE LATEST PUBLISHED VERSION FROM AZURE
+                ########################### TAKE THE ASSIGNMENT FILE AS YOUR PARAMETER FILE
+                ########################### IF THE CONTENT IN YOUR PARAMETER FILE DOES NOT MATCH WITH THE LATEST PUBLISHED VERSION IN AZURE
+                ########################### THEN MAKE THE CONTENT OF THE PARAMETER FILE MATCH IT
+
+                $paramPath = "$(vsoBpCodeDir)/$(organization)Assignment.json"
+                $latestPublishedVersion = Get-AzBlueprint -Name $bpName -SubscriptionId $(azSubscriptionId) -LatestVersion
+                $content = Get-Content -Path $paramPath -Raw | ConvertFrom-Json
+                $content.properties | ForEach-Object {
+                  If ($_.blueprintId -ne $latestPublishedVersion.Id) {
+                    $_.blueprintId = $latestPublishedVersion.Id
+                  }
+                }
+                $content | ConvertTo-Json -Depth 100 | Set-Content $paramPath
+                
+                ########################### GET THE BLUEPRINT ASSIGNMENT IF EXISTS
+                ########################### IF IT EXISTS ALREADY, THEN UPDATE IT WITH THE TEST VERSION
+                ########################### IF IT DOES NOT, THEN CREATE THE ASSIGNMENT WITH THE LATEST TEST VERSION
+                $testAssignmentName = "$(blueprintName)-$(organization)Assignment_TEST"
+                $existingBp = Get-AzBlueprintAssignment -Name $testAssignmentName -Blueprint $latestPublishedVersion -AssignmentFile $paramPath -SubscriptionId $(azSubscriptionId)
+
+                If ($existingBp) {
+                  Set-AzBlueprintAssignment -Name $testAssignmentName -Blueprint $latestPublishedVersion -AssignmentFile $paramPath -SubscriptionId $(azSubscriptionId)
+                } Else {
+                  Write-Host "The assignment does not exist yet. Let's create it..."
+                  New-AzBlueprintAssignment -Name $testAssignmentName -Blueprint $latestPublishedVersion -AssignmentFile $paramPath -SubscriptionId $(azSubscriptionId)
+                }
+
+                ########################### WAIT FOR THE ASSIGNMENT TO COMPLETE
+                $timeout = New-Timespan -Seconds 500
+                $sw = [Diagnostics.StopWatch]::StartNew()
+
+                While (($sw.elapsed -lt $timeout) -and ($assignmentStatus.ProvisioningState -ne "Succeeded") -and ($assignmentStatus.ProvisioningState -ne "Failed")) {
+                  $assignmentStatus = Get-AzBlueprintAssignment -Name $testAssignmentName -SubscriptionId $(azSubscriptionId)
+                  If ($assignmentStatus.ProvisioningState -eq "Failed") {
+                    Throw "Assignment FAILED. See Azure Portal for more details..."
+                    break
+                  }
+                }
+
+                If ($assignmentStatus.ProvisioningState -ne "Succeeded") {
+                  Write-Host "Assignment has timedout, activity is exiting."
+                }
+
           # - task: AzurePowerShell@5
           #   name: "AzBlueprint_AssignTEST"
           #   displayName: "AzBlueprint - Assign TEST"
