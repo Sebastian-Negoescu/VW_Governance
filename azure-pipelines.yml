@@ -154,7 +154,7 @@ stages:
                 ########################### IF THE CONTENT IN YOUR PARAMETER FILE DOES NOT MATCH WITH THE LATEST PUBLISHED VERSION IN AZURE
                 ########################### THEN MAKE THE CONTENT OF THE PARAMETER FILE MATCH IT
 
-                $paramPath = "$(vsoBpCodeDir)/$(organization)Assignment.json"
+                $paramPath = "$(vsoBpCodeDir)/$(organization)AssignmentTest.json"
                 $latestPublishedVersion = Get-AzBlueprint -Name $bpName -SubscriptionId $(azSubscriptionId) -LatestVersion
                 $content = Get-Content -Path $paramPath -Raw | ConvertFrom-Json
                 $content.properties | ForEach-Object {

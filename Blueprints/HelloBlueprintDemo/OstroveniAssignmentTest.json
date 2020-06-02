@@ -1,0 +1,41 @@
+{
+    "identity": {
+        "type": "systemAssigned"
+    },
+    "location": "westeurope",
+    "properties": {
+        "blueprintId": "/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/providers/Microsoft.Blueprint/blueprints/HelloBlueprintDemo",
+        "resourceGroups": {},
+        "locks": {
+            "mode": "none"
+        },
+        "parameters": {
+            "Policy_Allowed-Locations": {
+                "value": [
+                    "westeurope",
+                    "northeurope",
+                    "uksouth",
+                    "ukwest"
+                ]
+            },
+            "Policy_Allowed-Skus-StorageAccounts": {
+                "value": [
+                    "standard_lrs",
+                    "standard_ragrs"
+                ]
+            },
+            "Organization_Name": {
+                "value": "Ostroveni"
+            },
+            "Azure_Region": {
+                "value": "westeurope"
+            },
+            "Environment": {
+                "value": "DEV"
+            },
+            "CostCenter": {
+                "value": "Sebi Negoescu [DEV]"
+            }
+        }
+    }
+}
