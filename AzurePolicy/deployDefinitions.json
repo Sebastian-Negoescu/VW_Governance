@@ -28,7 +28,8 @@
             // Tagging
             "costCenterTagRgPolicy": "/PolicyDefinitions/policy-tag-cost-center-rg--deny.json",
             "costCenterTagResourcesPolicy": "/PolicyDefinitions/policy-tag-cost-center-resources--modify.json",
-            "envTagRgPolicy": "/PolicyDefinitions/policy-tag-env-rg--modify.json",
+            "envTagRgProdPolicy": "/PolicyDefinitions/policy-tag-env-rg-prod--modify.json",
+            "envTagRgDevPolicy": "/PolicyDefinitions/policy-tag-env-rg-dev--modify.json",
             "envTagResourcesPolicy": "/PolicyDefinitions/policy-tag-env-resources--modify.json",
 
             ////////////////////////////
@@ -130,12 +131,25 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
-            "name": "envTagRgPolicyDeployment",
+            "name": "envTagRgProdPolicyDeployment",
             "location": "[parameters('location')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                    "uri": "[concat(variables('templateBaseUrl'), variables('childTemplates').envTagRgPolicy)]",
+                    "uri": "[concat(variables('templateBaseUrl'), variables('childTemplates').envTagRgProdPolicy)]",
+                    "contentVersion": "1.0.0.0"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "envTagRgDevPolicyDeployment",
+            "location": "[parameters('location')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('templateBaseUrl'), variables('childTemplates').envTagRgDevPolicy)]",
                     "contentVersion": "1.0.0.0"
                 }
             }
@@ -206,7 +220,8 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', 'costCenterTagRgPolicyDeployment')]",
                 "[resourceId('Microsoft.Resources/deployments', 'costCenterTagResourcesPolicyDeployment')]",
-                "[resourceId('Microsoft.Resources/deployments', 'envTagRgPolicyDeployment')]",
+                "[resourceId('Microsoft.Resources/deployments', 'envTagRgProdPolicyDeployment')]",
+                "[resourceId('Microsoft.Resources/deployment', 'envTagRgDevPolicyDeployment')]",
                 "[resourceId('Microsoft.Resources/deployments', 'envTagResourcesPolicyDeployment')]"
             ]
         }
@@ -244,9 +259,13 @@
             "type": "string",
             "value": "[reference('costCenterTagResourcesPolicyDeployment').outputs.costCenterTagResourcesPolicyId.value]"
         },
-        "envTagRgPolicyDeploymentOutput": {
+        "envTagRgProdPolicyDeploymentOutput": {
             "type": "string",
-            "value": "[reference('envTagRgPolicyDeployment').outputs.envTagRgPolicyId.value]"
+            "value": "[reference('envTagRgProdPolicyDeployment').outputs.envTagRgProdPolicyId.value]"
+        },
+        "envTagRgDevPolicyDeploymentOutput": {
+            "type": "string",
+            "value": "[reference('envTagRgDevPolicyDeployment').outputs.envTagRgDevPolicyId.value]"
         },
         "envTagResourcesPolicyDeploymentOutput": {
             "type": "string",

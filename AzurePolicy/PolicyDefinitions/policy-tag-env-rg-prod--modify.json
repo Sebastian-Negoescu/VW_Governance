@@ -1,0 +1,83 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {
+        "policyName": "enforce-env-tag-rg-prod",
+        "policyDisplayName": "_*Enforce PROD Env Tag on RGs",
+        "policyDescription": "Enforce PROD 'Env' tag on the Resource Groups. Modify deployments with the PROD prefix."
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policyDefinitions",
+            "apiVersion": "2019-06-01",
+            "name": "[variables('policyName')]",
+            "properties": {
+                "displayName": "[variables('policyDisplayName')]",
+                "description": "[variables('policyDescription')]",
+                "metadata": {
+                    "category": "Tags"
+                },
+                "mode": "All",
+                "policyType": "Custom",
+                "parameters": {
+                    "tagName": {
+                        "type": "string",
+                        "metadata": {
+                            "displayName": "Tag Name",
+                            "description": "The name of your tag."
+                        },
+                        "defaultValue": "Env"
+                    }
+                },
+                "policyRule": {
+                    "if": {
+                        "allOf": [
+                            {
+                                "field": "type",
+                                "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+                            },
+                            {
+                                "anyOf": [
+                                    {
+                                        "field": "[[concat('tags[', parameters('tagName'), ']')]",
+                                        "exists": false
+                                    },
+                                    {
+                                        "field": "name",
+                                        "like": "prod-*"
+                                    },
+                                    {
+                                        "field": "name",
+                                        "notLike": "dev-*"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "then": {
+                        "effect": "modify",
+                        "details": {
+                            "roleDefinitionIds": [
+                                "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                            ],
+                            "operations": [
+                                {
+                                    "operation": "addOrReplace",
+                                    "field": "[[concat('tags[', parameters('tagName'), ']')]",
+                                    "value": "Production"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "outputs": {
+        "envTagRgProdPolicyId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Authorization/policyDefinitons', variables('policyName'))]"
+        }
+    }
+}

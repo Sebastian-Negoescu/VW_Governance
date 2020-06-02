@@ -3,9 +3,9 @@
     "contentVersion": "1.0.0.0",
     "parameters": {},
     "variables": {
-        "policyName": "enforce-env-tag-rg",
-        "policyDisplayName": "_*Enforce Env Tag on RGs",
-        "policyDescription": "Enforce 'Env' tag on the Resource Groups. Deny any deployments without it."
+        "policyName": "enforce-env-tag-rg-dev",
+        "policyDisplayName": "_*Enforce DEV Env Tag on RGs",
+        "policyDescription": "Enforce DEV 'Env' tag on the Resource Groups. Modify deployments with the PROD prefix."
     },
     "resources": [
         {
@@ -22,7 +22,7 @@
                 "policyType": "Custom",
                 "parameters": {
                     "tagName": {
-                        "type": "string",
+                        "type": "String",
                         "metadata": {
                             "displayName": "Tag Name",
                             "description": "The name of your tag."
@@ -38,20 +38,12 @@
                                 "equals": "Microsoft.Resources/subscriptions/resourceGroups"
                             },
                             {
-                                "anyOf": [
-                                    {
-                                        "field": "[[concat('tags[', parameters('tagName'), ']')]",
-                                        "exists": false
-                                    },
-                                    {
-                                        "field": "name",
-                                        "like": "prod-*"
-                                    },
-                                    {
-                                        "field": "name",
-                                        "notLike": "dev-*"
-                                    }
-                                ]
+                                "field": "name",
+                                "like": "DEV-*"
+                            },
+                            {
+                                "field": "[[concat('tags[', parameters('tagName'), ']')]",
+                                "exists": false
                             }
                         ]
                     },
@@ -65,7 +57,7 @@
                                 {
                                     "operation": "addOrReplace",
                                     "field": "[[concat('tags[', parameters('tagName'), ']')]",
-                                    "value": "Production"
+                                    "value": "Development"
                                 }
                             ]
                         }
@@ -75,9 +67,9 @@
         }
     ],
     "outputs": {
-        "envTagRgPolicyId": {
+        "envTagRgDevPolicyId": {
             "type": "string",
-            "value": "[resourceId('Microsoft.Authorization/policyDefinitons', variables('policyName'))]"
+            "value": "[resourceId('Microsoft.Authorization/policyDefinitions', variables('policyName'))]"
         }
     }
 }

@@ -30,7 +30,11 @@
                         "parameters": {}
                     },
                     {
-                        "policyDefinitionId": "[resourceId('Microsoft.Authorization/policyDefinitions', 'enforce-env-tag-rg')]",
+                        "policyDefinitionId": "[resourceId('Microsoft.Authorization/policyDefinitions', 'enforce-env-tag-rg-prod')]",
+                        "parameters": {}
+                    },
+                    {
+                        "policyDefinitionId": "[resourceId('Microsoft.Authorization/policyDefinitions', 'enforce-env-tag-rg-dev')]",
                         "parameters": {}
                     },
                     {
