@@ -221,7 +221,7 @@
                 "[resourceId('Microsoft.Resources/deployments', 'costCenterTagRgPolicyDeployment')]",
                 "[resourceId('Microsoft.Resources/deployments', 'costCenterTagResourcesPolicyDeployment')]",
                 "[resourceId('Microsoft.Resources/deployments', 'envTagRgProdPolicyDeployment')]",
-                "[resourceId('Microsoft.Resources/deployment', 'envTagRgDevPolicyDeployment')]",
+                "[resourceId('Microsoft.Resources/deployments', 'envTagRgDevPolicyDeployment')]",
                 "[resourceId('Microsoft.Resources/deployments', 'envTagResourcesPolicyDeployment')]"
             ]
         }
