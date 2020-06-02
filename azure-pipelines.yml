@@ -194,7 +194,7 @@ stages:
                 }
       - job: "AzBlueprint_STABLE"
         displayName: "Publish STABLE"
-        dependsOn: "AzBlueprint_TEST"
+        dependsOn: ["Build_Blueprint", "AzBlueprint_TEST"]
         variables:
           vsoAzBlueprint: $[ dependencies.Build_Blueprint.outputs['Set_BuildInfo.AZBLUEPRINT'] ]
           vsoBpLastVersion: $[ dependencies.Build_Blueprint.outputs['Set_BuildInfo.BPLASTVERSION'] ]
