@@ -24,8 +24,8 @@ variables:
   organization: "Ostroveni"
 
 stages:
-  - stage: "Build_Stage"
-    displayName: "BUILD STAGE"
+  - stage: "Azure_Blueprints"
+    displayName: "Azure Blueprints"
     pool: "Default"
     jobs:
       - job: "Clean_Workspace"
@@ -192,16 +192,15 @@ stages:
                 If ($assignmentStatus.ProvisioningState -ne "Succeeded") {
                   Write-Host "Assignment has timedout, activity is exiting."
                 }
-
-          # - task: AzurePowerShell@5
-          #   name: "AzBlueprint_AssignTEST"
-          #   displayName: "AzBlueprint - Assign TEST"
-          #   inputs:
-          #     azureSubscription: $(azConnection)
-          #     azurePowerShellVersion: "LatestVersion"
-          #     ScriptType: "InlineScript"
-          #     Inline: |
-          #       $azBlueprint = Get-AzBlueprint -Name $(blueprintName) -SubscriptionId $(azSubscriptionId)
-          #       $testAssignmentName = "$(blueprintName)-$(organization)Assignment_TEST"
-          #       New-AzBlueprintAssignment -Name "$testAssignmentName" -Blueprint $azBlueprint -SubscriptionId $(azSubscriptionId) -AssignmentFile "$(vsoBpCodeDir)/$(organization)Assignment_TEST.json"
-          #       ### DEVELOP A WAY TO CHECK THE STATUS OF THE BLUEPRINT'S ASSIGNMENT && BASED ON IT, DEPLOY STABLE
+          - task: AzurePowerShell@5
+            name: "AzBlueprint_PublishSTABLE"
+            displayName: "AzBlueprint - Publish STABLE"
+            inputs:
+              azureSubscription: $(azConnection)
+              azurePowerShellVersion: "LatestVersion"
+              ScriptType: "InlineScript"
+              Inline: |
+                $bpNewVersion_STABLE = [String]$(vsoBpNewVersion) + "_STABLE"
+                $azBlueprint = Get-AzBlueprint -Name $(blueprintName) -SubscriptionId $(azSubscriptionId)
+                Publish-AzBlueprint -Blueprint $azBlueprint -Version $bpNewVersion_STABLE -ChangeNote "Publish STABLE version; Successfully tested $(AzBlueprint_PublishTEST.vsoBpNewVersion_TEST)"
+                
