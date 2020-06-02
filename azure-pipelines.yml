@@ -192,6 +192,16 @@ stages:
                 If ($assignmentStatus.ProvisioningState -ne "Succeeded") {
                   Write-Host "Assignment has timedout, activity is exiting."
                 }
+      - job: "AzBlueprint_STABLE"
+        displayName: "Publish STABLE"
+        dependsOn: "AzBlueprint_TEST"
+        variables:
+          vsoAzBlueprint: $[ dependencies.Build_Blueprint.outputs['Set_BuildInfo.AZBLUEPRINT'] ]
+          vsoBpLastVersion: $[ dependencies.Build_Blueprint.outputs['Set_BuildInfo.BPLASTVERSION'] ]
+          vsoBpNewVersion: $[ dependencies.Build_Blueprint.outputs['Set_BuildInfo.BPNEWVERSION'] ]
+          vsoBpCodeDir: $[ dependencies.Build_Blueprint.outputs['Set_BuildInfo.BPCODEDIR'] ]
+          vsoBpVersion_TEST: $[ dependencies.AzBlueprint_TEST.output['AzBlueprint_PublishTEST.vsoBpNewVersion_TEST'] ]
+        steps:
           - task: AzurePowerShell@5
             name: "AzBlueprint_PublishSTABLE"
             displayName: "AzBlueprint - Publish STABLE"
@@ -202,5 +212,4 @@ stages:
               Inline: |
                 $bpNewVersion_STABLE = [String]$(vsoBpNewVersion) + "_STABLE"
                 $azBlueprint = Get-AzBlueprint -Name $(blueprintName) -SubscriptionId $(azSubscriptionId)
-                Publish-AzBlueprint -Blueprint $azBlueprint -Version $bpNewVersion_STABLE -ChangeNote "Publish STABLE version; Successfully tested $(AzBlueprint_PublishTEST.vsoBpNewVersion_TEST)"
-                
+                Publish-AzBlueprint -Blueprint $azBlueprint -Version $bpNewVersion_STABLE -ChangeNote "Publish STABLE version; Successfully tested $(vsoBpVersion_TEST)"
