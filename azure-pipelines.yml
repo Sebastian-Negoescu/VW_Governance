@@ -1,9 +1,11 @@
-# Testing the Azure Pipeline logic in the following order:
-# 1. Get the Appropriate variables like BlueprintsPath, BlueprintName, etc.
-# 2. Save the new blueprint as Draft (Import-AzBlueprintWithArtifacts)
-# 3. Publish the Blueprint as a *.TEST version since we do NOT know if everything will work as expected
-# 4. Assign the Blueprint to a Test Environment
-# 5. If everything works as expected (Assignment's provisioning status is Successful) -> Publish the Blueprint as *.STABLE version
+#######################################################################################################################################
+## Testing the Azure Pipeline logic in the following order:                                                                          ##
+## 1. Get the Appropriate variables like BlueprintsPath, BlueprintName, etc.                                                         ##
+## 2. Save the new blueprint as Draft (Import-AzBlueprintWithArtifacts)                                                              ##
+## 3. Publish the Blueprint as a *.TEST version since we do NOT know if everything will work as expected                             ##
+## 4. Assign the Blueprint to a Test Environment                                                                                     ##
+## 5. If everything works as expected (Assignment's provisioning status is Successful) -> Publish the Blueprint as *.STABLE version  ##
+#######################################################################################################################################
 
 trigger:
   branches:
