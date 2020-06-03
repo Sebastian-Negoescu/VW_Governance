@@ -38,20 +38,8 @@
                                 "equals": "Microsoft.Resources/subscriptions/resourceGroups"
                             },
                             {
-                                "anyOf": [
-                                    {
-                                        "field": "[[concat('tags[', parameters('tagName'), ']')]",
-                                        "exists": false
-                                    },
-                                    {
-                                        "field": "name",
-                                        "like": "prod-*"
-                                    },
-                                    {
-                                        "field": "name",
-                                        "notLike": "dev-*"
-                                    }
-                                ]
+                                "field": "name",
+                                "like": "prod-*"
                             }
                         ]
                     },
