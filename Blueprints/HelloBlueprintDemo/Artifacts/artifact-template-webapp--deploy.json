@@ -68,7 +68,7 @@
                 "value": "[parameters('Azure_Region')]"
             },
             "aspRef": {
-                "value": "[artifacts('artifact-template-app-service-plan--deploy').outputs.aspId.value]"
+                "value": "[artifacts('artifact-template-app-service-plan--deploy').outputs.aspId]"
             }
         }
     }
