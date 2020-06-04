@@ -1,0 +1,75 @@
+{
+    "kind": "template",
+    "name": "webApp",
+    "properties": {
+        "displayName": "WebApp",
+        "description": "Azure App Service Web App that will host the application's code. [Python 3.7]",
+        "dependsOn": [
+            "appServicePlan"
+        ],
+        "template": {
+            "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "Prefix": {
+                    "type": "string"
+                },
+                "Location": {
+                    "type": "string"
+                },
+                "aspRef": {
+                    "type": "string"
+                }
+            },
+            "variables": {
+                "webAppName": "[concat(parameters('Prefix'), '-WebApp')]"
+            },
+            "resources": [
+                {
+                    "type": "Microsoft.Web/sites",
+                    "apiVersion": "2019-08-01",
+                    "name": "[variables('webAppName')]",
+                    "location": "[parameters('Location')]",
+                    "dependsOn": [],
+                    "properties": {
+                        "name": "[variables('webAppName')]",
+                        "serverFarmId": "[parameters('aspRef')]",
+                        "siteConfig": {
+                            "linuxFxVersion": "PYTHON|3.7",
+                            "alwaysOn": true,
+                            "appSettings": [
+                                {
+                                    "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+                                    "value": "true"
+                                }
+                            ]
+                        },
+                        "clientAffinityEnabled": false
+                    }
+                }
+            ],
+            "outputs": {
+                "webAppId": {
+                    "type": "string",
+                    "value": "[resourceId('Microsoft.Web/sites', variables('webAppName'))]"
+                },
+                "webAppDefaultHostName": {
+                    "type": "string",
+                    "value": "[reference(resourceId('Microsoft.Web/sites', variables('webAppName'))).DefaultHostName]"
+                }
+            }
+        },
+        "resourceGroup": "Application-RG",
+        "parameters": {
+            "Prefix": {
+                "value": "[parameters('Prefix')]"
+            },
+            "Location": {
+                "value": "[parameters('Azure_Region')]"
+            },
+            "aspRef": {
+                "value": "[artifacts('appServicePlan').outputs.aspId.value]"
+            }
+        }
+    }
+}
