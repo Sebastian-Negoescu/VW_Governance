@@ -5,7 +5,7 @@
         "displayName": "WebApp",
         "description": "Azure App Service Web App that will host the application's code. [Python 3.7]",
         "dependsOn": [
-            "appServicePlan"
+            "artifact-template-app-service-plan--deploy"
         ],
         "template": {
             "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
