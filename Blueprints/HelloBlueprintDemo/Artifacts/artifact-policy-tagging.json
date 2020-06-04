@@ -8,5 +8,6 @@
     },
     "identity": {
         "type": "SystemAssigned"
-    }
+    },
+    "location": "[parameters('Azure_Region')]"
 }
