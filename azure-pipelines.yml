@@ -200,7 +200,7 @@ stages:
           vsoBpLastVersion: $[ dependencies.Build_Blueprint.outputs['Set_BuildInfo.BPLASTVERSION'] ]
           vsoBpNewVersion: $[ dependencies.Build_Blueprint.outputs['Set_BuildInfo.BPNEWVERSION'] ]
           vsoBpCodeDir: $[ dependencies.Build_Blueprint.outputs['Set_BuildInfo.BPCODEDIR'] ]
-          vsoBpVersion_TEST: $[ dependencies.AzBlueprint_TEST.output['AzBlueprint_PublishTEST.vsoBpNewVersion_TEST'] ]
+          vsoBpVersion_TEST: $[ dependencies.AzBlueprint_TEST.outputs['AzBlueprint_PublishTEST.vsoBpNewVersion_TEST'] ]
         steps:
           - task: AzurePowerShell@5
             name: "AzBlueprint_PublishSTABLE"
