@@ -2,7 +2,7 @@
     "kind": "template",
     "name": "virtualNetwork",
     "properties": {
-        "displayName": "Deploy VNet",
+        "displayName": "Virtual Network",
         "description": "Deploy Virtual Network and Subnet.",
         "dependsOn": [],
         "template": {
