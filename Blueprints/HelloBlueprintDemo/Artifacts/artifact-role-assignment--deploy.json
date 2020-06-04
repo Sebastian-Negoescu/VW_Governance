@@ -1,9 +1,0 @@
-{
-    "kind": "roleAssignment",
-    "properties": {
-        "roleDefinitionId": "/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
-        "principalIds": ["1ef1b9fe-f380-48b5-90d4-04da43768578"],
-        "displayName": "ServicePrincipal-Contributor"
-    },
-    "name": "contributorRoleAssignment"
-}
