@@ -52,15 +52,7 @@
                     ]
                 }
             ],
-            "outputs": {
-                "pipIds": {
-                    "type": "array",
-                    "copy": {
-                        "count": "[parameters('Cluster_Size')]",
-                        "input": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Prefix'), '-PIP-', copyIndex()))]"
-                    }
-                }
-            }
+            "outputs": {}
         },
         "resourceGroup": "Network-RG",
         "parameters": {
