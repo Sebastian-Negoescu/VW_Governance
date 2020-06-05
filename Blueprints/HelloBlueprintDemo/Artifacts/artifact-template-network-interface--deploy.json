@@ -60,7 +60,7 @@
                     "type": "array",
                     "copy": {
                         "count": "[parameters('Cluster_Size')]",
-                        "input": "[reference(resourceId('Microsoft.Network/networkInterfaces', concat(parameters('Prefix'), '-NIC-', copyIndex())), '2020-03-01', 'Full').resourceId]"
+                        "input": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('Prefix'), '-NIC-', copyIndex()))]"
                     }
                 }
             }
