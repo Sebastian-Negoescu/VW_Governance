@@ -1,0 +1,75 @@
+{
+    "kind": "template",
+    "name": "networkinterface",
+    "properties": {
+        "displayName": "Network Interfaces",
+        "description": "Network Interfaces that will be attached to the VM(s).",
+        "dependsOn": [
+            "artifact-template-public-ip--deploy"
+        ],
+        "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "Prefix": {
+                    "type": "string"
+                },
+                "Location": {
+                    "type": "string"
+                },
+                "Cluster_Size": {
+                    "type": "int"
+                },
+                "Subnet_Ref": {
+                    "type": "string"
+                }
+            },
+            "variables": {},
+            "resources": [
+                {
+                    "type": "Microsoft.Network/networkInterfaces",
+                    "apiVersion": "2020-03-01",
+                    "name": "[concat(parameters('Prefix'), '-NIC-', copyIndex())]",
+                    "location": "[parameters('Location')]",
+                    "copy": {
+                        "name": "NIC-Copy",
+                        "count": "[parameters('Cluster_Size')]"
+                    },
+                    "properties": {
+                        "ipConfigurations": [
+                            {
+                                "name": "IPConfig1",
+                                "properties": {
+                                    "subnet": {
+                                        "id": "[parameters('Subnet_Ref')]"
+                                    },
+                                    "privateIPAllocationMethod": "Dynamic",
+                                    "primary": true,
+                                    "publicIPAddress": {
+                                        "id": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Prefix'), '-PIP-', copyIndex())), '2020-03-01', 'Full').Id]"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "dependsOn": []
+                }
+            ]
+        },
+        "resourceGroup": "Network-RG",
+        "parameters": {
+            "Prefix": {
+                "value": "[parameters('Prefix')]"
+            },
+            "Location": {
+                "value": "[parameters('Azure_Region')]"
+            },
+            "Cluster_Size": {
+                "value": "[parameters('Cluster_Size')]"
+            },
+            "Subnet_Ref": {
+                "value": "[artifacts('artifact-template-vnet--deploy').outputs.subnetId]"
+            }
+        }
+    }
+}
