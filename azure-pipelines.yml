@@ -213,3 +213,14 @@ stages:
                 $bpNewVersion_STABLE = [String]$(vsoBpNewVersion) + "_STABLE"
                 $azBlueprint = Get-AzBlueprint -Name $(blueprintName) -SubscriptionId $(azSubscriptionId)
                 Publish-AzBlueprint -Blueprint $azBlueprint -Version $bpNewVersion_STABLE -ChangeNote "Publish STABLE version; Successfully tested $(vsoBpVersion_TEST)"
+          - task: AzurePowerShell@5
+            name: "Clean_Test"
+            displayName: "Clean AzBlueprint TEST Resources"
+            inputs:
+              azureSubscription: $(azConnection)
+              azurePowerShellVersion: "LatestVersion"
+              ScriptType: "InlineScript"
+              Inline: | 
+                Write-Host "Clean resources deployed through the Test Version Deployment"
+                Get-AzResourceGroup | Where-Object ResourceGroupName -like "DEV-$(organization)*" | Remove-AzResourceGroup -Force
+                Write-Host "Pipeline finished. See you later!"
