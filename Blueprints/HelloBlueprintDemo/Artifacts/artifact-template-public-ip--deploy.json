@@ -47,9 +47,7 @@
                             "fqdn": "[toLower(concat(variables('domainNameLabel'), '.', parameters('Location'), '.cloudapp.azure.com'))]"
                         }
                     },
-                    "dependsOn": [
-                        "[parameters('VNet_Ref')]"
-                    ]
+                    "dependsOn": []
                 }
             ],
             "outputs": {}
