@@ -46,7 +46,7 @@
                                     "privateIPAllocationMethod": "Dynamic",
                                     "primary": true,
                                     "publicIPAddress": {
-                                        "id": "[reference(concat(resourceGroup().id, '/providers/Microsoft.Network/publicIPAddresses/', concat(parameters('Prefix'), '-PIP-', copyIndex())), '2020-03-01', 'Full').resourceId]"
+                                        "id": "[reference(resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Prefix'), '-PIP-', copyIndex())), '2020-03-01', 'Full').resourceId]"
                                     }
                                 }
                             }
