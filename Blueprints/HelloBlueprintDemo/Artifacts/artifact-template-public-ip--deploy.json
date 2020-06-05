@@ -1,0 +1,81 @@
+{
+    "kind": "template",
+    "name": "publicip",
+    "properties": {
+        "displayName": "Public IP Addresses",
+        "description": "Public IP addresses that will be the outside point of connection for VM(s).",
+        "dependsOn": [
+            "artifact-template-vnet--deploy"
+        ],
+        "template": {
+            "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "Prefix": {
+                    "type": "string"
+                },
+                "Location": {
+                    "type": "string"
+                },
+                "Cluster_Size": {
+                    "type": "int"
+                },
+                "VNet_Ref": {
+                    "type": "string"
+                }
+            },
+            "variables": {
+                "domainNameLabel": "[concat(parameters('Prefix'), '-bpagent')]"
+            },
+            "resources": [
+                {
+                    "type": "Microsoft.Network/publicIPAddresses",
+                    "apiVersion": "2020-03-01",
+                    "name": "[concat(parameters('Prefix'), '-PIP-', copyIndex())]",
+                    "location": "[parameters('Location')]",
+                    "copy": {
+                        "name": "PIP-Copy",
+                        "count": "[parameters('Cluster_Size')]"
+                    },
+                    "sku": {
+                        "name": "Basic"
+                    },
+                    "properties": {
+                        "publicIPAllocationMethod": "Dynamic",
+                        "dnsSettings": {
+                            "domainNameLabel": "[concat(variables('domainNameLabel'), copyIndex())]",
+                            "fqdn": "[concat(variables('domainNameLabel'), '.', parameters('Location'), '.cloudapp.azure.com')]"
+                        }
+                    },
+                    "dependsOn": [
+                        "[parameters('VNet_Ref')]"
+                    ]
+                }
+            ],
+            "outputs": {
+                "pipIds": {
+                    "type": "array",
+                    "copy": {
+                        "count": "[parameters('Cluster_Size')]",
+                        "input": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('Prefix'), '-PIP-', copyIndex()))]"
+                    }
+                }
+            }
+        },
+        "resourceGroup": "Network-RG",
+        "parameters": {
+            "Prefix": {
+                "value": "[parameters('Prefix')]"
+            },
+            "Location": {
+                "value": "[parameters('Azure_Region')]"
+            },
+            "Cluster_Size": {
+                "value": "[parameters('Cluster_Size')]"
+            },
+            "VNet_Ref": {
+                "value": "[artifacts('artifact-template-vnet--deploy').outputs.vnetId]"
+            }
+        }
+    }
+}
