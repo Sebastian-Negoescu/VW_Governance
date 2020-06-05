@@ -25,7 +25,7 @@
                 }
             },
             "variables": {
-                "domainNameLabel": "[concat(parameters('Prefix'), '-bpagent')]"
+                "domainNameLabel": "[concat(parameters('Prefix'), 'myagent')]"
             },
             "resources": [
                 {
@@ -43,8 +43,8 @@
                     "properties": {
                         "publicIPAllocationMethod": "Dynamic",
                         "dnsSettings": {
-                            "domainNameLabel": "[concat(variables('domainNameLabel'), copyIndex())]",
-                            "fqdn": "[concat(variables('domainNameLabel'), '.', parameters('Location'), '.cloudapp.azure.com')]"
+                            "domainNameLabel": "[toLower(concat(variables('domainNameLabel'), copyIndex()))]",
+                            "fqdn": "[toLower(concat(variables('domainNameLabel'), '.', parameters('Location'), '.cloudapp.azure.com'))]"
                         }
                     },
                     "dependsOn": [
