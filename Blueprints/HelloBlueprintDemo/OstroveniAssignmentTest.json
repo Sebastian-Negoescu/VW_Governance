@@ -35,6 +35,9 @@
             },
             "CostCenter": {
                 "value": "Sebi Negoescu [DEV]"
+            },
+            "Cluster_Size": {
+                "value": 2
             }
         }
     }

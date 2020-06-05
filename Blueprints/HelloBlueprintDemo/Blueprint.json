@@ -56,6 +56,9 @@
                     "description": "Prefix to be used for naming convention."
                 },
                 "defaultValue": "[concat(parameters('Environment'), '-', parameters('Organization_Name'))]"
+            },
+            "Cluster_Size": {
+                "type": "int"
             }
         },
         "resourceGroups": {
