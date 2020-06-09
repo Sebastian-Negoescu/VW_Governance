@@ -1,0 +1,83 @@
+{
+    "kind": "template",
+    "name": "VirtualMachine",
+    "properties": {
+        "displayName": "Virtual Machines",
+        "description": "Virtual Machines that will host our DevOps agents.",
+        "dependsOn": [
+            "artifact-template-keyvault--deploy",
+            "artifact-template-network-interface--deploy",
+            "artifact-template-storage-account--deploy"
+        ],
+        "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "Prefix": {
+                    "type": "string"
+                },
+                "Location": {
+                    "type": "string"
+                },
+                "Cluster_Size": {
+                    "type": "string"
+                },
+                "Operating_System": {
+                    "type": "string",
+                    "allowedValues": [
+                        "Windows",
+                        "Linux"
+                    ],
+                    "defaultValue": "Linux"
+                },
+                "adminUserName": {
+                    "type": "string",
+                    "defaultValue": "ansible"
+                },
+                "KeyVault_Reference": {
+                    "type": "string"
+                },
+                "KeyVault_AdminPassword": {
+                    "type": "securestring"
+                },
+                "KeyVault_AdminSsh": {
+                    "type": "securestring"
+                }
+            },
+            "variables": {
+                "vmName": "[concat(parameters('Prefix'), '-VM-')]",
+                "vmImage": {
+                    "Linux": {
+                        "publisher": "Canonical",
+                        "offer": "UbuntuServer",
+                        "sku": "18.04-LTS",
+                        "version": "latest"
+                    }
+                }
+            },
+            "resources": [],
+            "outputs": {}
+        },
+        "resourceGroup": "Compute-RG",
+        "parameters": {
+            "Prefix": {
+                "value": "[parameters('Prefix')]"
+            },
+            "Location": {
+                "value": "[parameters('Azure_Region')]"
+            },
+            "Cluster_Size": {
+                "value": "[parameters('Cluster_Size')]"
+            },
+            "KeyVault_Reference": {
+                "value": "[artifacts('artifact-template-keyvault--deploy').outputs.myKeyVaultId]"
+            },
+            "KeyVault_AdminPassword": {
+                "value": "[parameters('KeyVault_AdminPassword')]"
+            },
+            "KeyVault_AdminSsh": {
+                "value": "[parameters('KeyVault_AdminSsh')]"
+            }
+        }
+    }
+}
