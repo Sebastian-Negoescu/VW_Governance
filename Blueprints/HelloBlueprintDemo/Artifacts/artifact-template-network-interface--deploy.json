@@ -46,7 +46,7 @@
                                     "privateIPAllocationMethod": "Dynamic",
                                     "primary": true,
                                     "publicIPAddress": {
-                                        "id": "[concat('/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/resourceGroups/DEV-Ostroveni-Network-RG/providers/Microsoft.Network/publicIPAddresses/DEV-Ostroveni-PIP-', copyIndex())]"
+                                        "id": "[concat('/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/resourceGroups/', parameters('Prefix'), '-Network-RG/providers/Microsoft.Network/publicIPAddresses/', parameters('Prefix'), '-PIP-', copyIndex())]"
                                     }
                                 }
                             }
