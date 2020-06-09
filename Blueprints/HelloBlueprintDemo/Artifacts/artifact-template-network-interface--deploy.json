@@ -55,15 +55,7 @@
                     "dependsOn": []
                 }
             ],
-            "outputs": {
-                "nicIds": {
-                    "type": "array",
-                    "copy": {
-                        "count": "[parameters('Cluster_Size')]",
-                        "input": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('Prefix'), '-NIC-', copyIndex()))]"
-                    }
-                }
-            }
+            "outputs": {}
         },
         "resourceGroup": "Network-RG",
         "parameters": {
