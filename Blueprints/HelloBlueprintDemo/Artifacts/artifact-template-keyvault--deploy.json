@@ -1,0 +1,130 @@
+{
+    "kind": "template",
+    "name": "keyvault",
+    "properties": {
+        "displayName": "Key Vault",
+        "description": "Key Vault that will contain the secrets used in our environment.",
+        "dependsOn": [],
+        "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "Prefix": {
+                    "type": "string"
+                },
+                "Location": {
+                    "type": "string"
+                },
+                "KV-AccessPolicy": {
+                    "type": "string"
+                }
+            },
+            "variables": {
+                "kvName": "[concat(parameters('Prefix'), '-KeyVault')]"
+            },
+            "resources": [
+                {
+                    "type": "Microsoft.KeyVault/vaults",
+                    "apiVersion": "2019-09-01",
+                    "name": "[variables('kvName')]",
+                    "location": "[parameters('Location')]",
+                    "properties": {
+                        "createMode": "default",
+                        "enabledForDeployment": true,
+                        "enabledForDiskEncryption": true,
+                        "enabledForTemplateDeployment": true,
+                        "tenantId": "[subscription().tenantId]",
+                        "sku": {
+                            "name": "standard",
+                            "family": "A"
+                        },
+                        "networkAcls": {
+                            "defaultAction": "Allow",
+                            "bypass": "AzureServices",
+                            "virtualNetworkRules": [],
+                            "ipRules": []
+                        },
+                        "accessPolicies": [
+                            {
+                                "objectId": "[parameters('KV-AccessPolicy')]",
+                                "tenantId": "[subscription().tenantId]",
+                                "permissions": {
+                                    "keys": [
+                                        "get",
+                                        "list",
+                                        "update",
+                                        "create",
+                                        "import",
+                                        "delete",
+                                        "recover",
+                                        "backup",
+                                        "restore"
+                                    ],
+                                    "secrets": [
+                                        "get",
+                                        "list",
+                                        "set",
+                                        "delete",
+                                        "recover",
+                                        "backup",
+                                        "restore"
+                                    ],
+                                    "certificates": [
+                                        "get",
+                                        "list",
+                                        "update",
+                                        "create",
+                                        "import",
+                                        "delete",
+                                        "recover",
+                                        "deleteissuers",
+                                        "recover",
+                                        "managecontacts",
+                                        "manageissuers",
+                                        "getissuers",
+                                        "listissuers",
+                                        "setissuers"
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "Microsoft.KeyVault/vaults/secrets",
+                    "apiVersion": "2019-09-01",
+                    "name": "[concat(variables('kvName'), '/', parameters('Prefix'), '-VMPwd')]",
+                    "location": "[parameters('Location')]",
+                    "properties": {
+                        "value": "YourVMPwd"
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.KeyVault/vaults', variables('kvName'))]"
+                    ]
+                }
+            ],
+            "outputs": {
+                "myKeyVaultId": {
+                    "type": "string",
+                    "value": "[resourceId('Microsoft.KeyVault/vaults', variables('kvName'))]"
+                },
+                "myKeyVaultSecretId": {
+                    "type": "string",
+                    "value": "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), concat(parameters('Prefix'), '-VMPWD'))]"
+                }
+            }
+        },
+        "resourceGroup": "Security-RG",
+        "parameters": {
+            "Prefix": {
+                "value": "[parameters('Prefix')]"
+            },
+            "Location": {
+                "value": "[parameters('Azure_Region')]"
+            },
+            "KV-AccessPolicy": {
+                "value": "[parameters('KV-AccessPolicy')]"
+            }
+        }
+    }
+}

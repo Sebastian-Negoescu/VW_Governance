@@ -38,6 +38,9 @@
             },
             "Cluster_Size": {
                 "value": 3
+            },
+            "KV-AccessPolicy": {
+                "value": "f225d02b-4026-4064-8632-b79c31798dbc"
             }
         }
     }
