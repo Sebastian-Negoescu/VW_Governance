@@ -41,6 +41,22 @@
             },
             "KV-AccessPolicy": {
                 "value": "f671740b-5add-40b1-b742-905e8976fc18"
+            },
+            "KeyVault_AdminPassword": {
+                "reference": {
+                    "keyvault": {
+                        "id": "[artifacts('artifact-template-keyvault--deploy').outputs.myKeyVaultId]"
+                    },
+                    "secretName": "adminPwd"
+                }
+            },
+            "KeyVault_AdminSsh": {
+                "reference": {
+                    "keyvault": {
+                        "id": "[artifacts('artifact-template-keyvault--deploy').outputs.myKeyVaultId]"
+                    },
+                    "secretName": "adminSsh"
+                }
             }
         }
     }
