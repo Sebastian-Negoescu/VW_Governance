@@ -94,10 +94,22 @@
                 {
                     "type": "Microsoft.KeyVault/vaults/secrets",
                     "apiVersion": "2019-09-01",
-                    "name": "[concat(variables('kvName'), '/', parameters('Prefix'), '-VMPwd')]",
+                    "name": "[concat(variables('kvName'), '/adminPwd')]",
                     "location": "[parameters('Location')]",
                     "properties": {
                         "value": "YourVMPwd"
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.KeyVault/vaults', variables('kvName'))]"
+                    ]
+                },
+                {
+                    "type": "Microsoft.KeyVault/vaults/secrets",
+                    "apiVersion": "2019-04-01",
+                    "name": "[concat(variables('kvName'), '/adminSsh')]",
+                    "location": "[parameters('Location')]",
+                    "properties": {
+                        "value": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDDu/D9HeE5TtIXXgohAHy86BFl5UtFJYkzwOqjggPf93RLzCSP1lYbX3ClD1d+7hMUPhBtBA85rkL5JFANsnjHY+ddzFREhDgSCCceLLBkcLhMZvcnvPlO95rm3kjBRjgBl5Wy1504QvZYvMjtVc1azDCUE7TiYz+H6NwRmigALkyWUctr2acFTAJHjitm0e4mcSAy/DI+gdO84lUIVId7XHbvSjh9bCzJf4we1tMrrh6Ida7sbA/7m1ZkeGDu79GBJ01ixRnmGiFiATVlhBjQqZd+y53uA+4XfzG70jOrbOPbgGRG51HEUAR3j6Z7B8TATMCa3RYF1OL/lxmAjqXR sebinegoescu@Sebastians-MacBook-Air.local"
                     },
                     "dependsOn": [
                         "[resourceId('Microsoft.KeyVault/vaults', variables('kvName'))]"
@@ -109,9 +121,13 @@
                     "type": "string",
                     "value": "[resourceId('Microsoft.KeyVault/vaults', variables('kvName'))]"
                 },
-                "myKeyVaultSecretId": {
+                "myKeyVaultAdminPwdSecretId": {
                     "type": "string",
-                    "value": "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), concat(parameters('Prefix'), '-VMPWD'))]"
+                    "value": "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), 'adminPwd'))]"
+                },
+                "myKeyVaultAdminSshSecretId": {
+                    "type": "string",
+                    "value": "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), 'adminSsh'))]"
                 }
             }
         },
