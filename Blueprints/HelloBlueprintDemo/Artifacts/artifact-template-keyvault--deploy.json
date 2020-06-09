@@ -33,6 +33,7 @@
                         "enabledForDeployment": true,
                         "enabledForDiskEncryption": true,
                         "enabledForTemplateDeployment": true,
+                        "enableSoftDelete": false,
                         "tenantId": "[subscription().tenantId]",
                         "sku": {
                             "name": "standard",
