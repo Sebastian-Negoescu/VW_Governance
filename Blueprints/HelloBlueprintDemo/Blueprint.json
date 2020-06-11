@@ -67,15 +67,13 @@
                     "description": "Azure AD Group or User 'ObjectID' to grant permissions in Key Vault.(Example: abc123de-f456-ghi7-89jk-l0mno123pqr4)"
                 }
             },
-            "KeyVault_AdminPassword": {
-                "type": "securestring"
-            },
-            "KeyVault_AdminSsh": {
-                "type": "securestring"
-            },
             "KeyVault_Name": {
                 "type": "string",
                 "defaultValue": "[concat(parameters('Prefix'), '-KeyVault')]"
+            },
+            "KeyVault_RGName": {
+                "type": "string",
+                "defaultValue": "[concat(parameters('Prefix'), '-Security-RG')]"
             }
         },
         "resourceGroups": {
