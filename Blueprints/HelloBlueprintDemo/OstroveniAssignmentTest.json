@@ -41,6 +41,9 @@
             },
             "KV-AccessPolicy": {
                 "value": "f671740b-5add-40b1-b742-905e8976fc18"
+            },
+            "Agent_OperatingSystem": {
+                "value": "Linux"
             }
         }
     }
