@@ -73,10 +73,20 @@
                 "value": "[artifacts('artifact-template-keyvault--deploy').outputs.myKeyVaultId]"
             },
             "KeyVault_AdminPassword": {
-                "value": "[parameters('KeyVault_AdminPassword')]"
+                "reference": {
+                    "keyvault": {
+                        "id": "[parameters('KeyVault_Reference')]"
+                    },
+                    "secretName": "adminPwd"
+                }
             },
             "KeyVault_AdminSsh": {
-                "value": "[parameters('KeyVault_AdminSsh')]"
+                "reference": {
+                    "keyvault": {
+                        "id": "[parameters('KeyVault_Reference')]"
+                    },
+                    "secretName": "adminSsh"
+                }
             }
         }
     }

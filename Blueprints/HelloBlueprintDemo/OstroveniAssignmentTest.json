@@ -41,21 +41,6 @@
             },
             "KV-AccessPolicy": {
                 "value": "f671740b-5add-40b1-b742-905e8976fc18"
-            },
-            "KeyVault_AdminPassword": {
-                "reference": {
-                    "keyvault": {
-                        "id": "[resourceId(subscription().subscriptionId, resourceGroups('Security-RG').name, 'Microsoft.KeyVault/vaults', parameters('KeyVault_Name'))]"
-                    },
-                    "secretName": "adminPwd"
-                }
-            },
-            "KeyVault_AdminSsh": {
-                "reference": {
-                    "keyvault": {
-                        "id": "[resourceId(subscription().subscriptionId, resourceGroups('Security-RG').name, 'Microsoft.KeyVault/vaults', parameters('KeyVault_Name'))]"                    },
-                    "secretName": "adminSsh"
-                }
             }
         }
     }
