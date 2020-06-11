@@ -27,8 +27,7 @@
                     "allowedValues": [
                         "Windows",
                         "Linux"
-                    ],
-                    "defaultValue": "Linux"
+                    ]
                 },
                 "adminUserName": {
                     "type": "string",
@@ -42,6 +41,9 @@
                 },
                 "KeyVault_AdminSsh": {
                     "type": "securestring"
+                },
+                "StorageAccount_BlobUri": {
+                    "type": "string"
                 }
             },
             "variables": {
@@ -52,10 +54,80 @@
                         "offer": "UbuntuServer",
                         "sku": "18.04-LTS",
                         "version": "latest"
+                    },
+                    "Windows": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2019-Datacenter",
+                        "version": "latest"
                     }
                 }
             },
-            "resources": [],
+            "resources": [
+                {
+                    "condition": "[equals(variables('vmImage')[parameters('Operating_System'), 'Linux'])]",
+                    "type": "Microsoft.Compute/virtualMachines",
+                    "apiVersion": "2019-12-01",
+                    "name": "[concat(variables('vmName'), copyIndex())]",
+                    "location": "[parameters('Location')]",
+                    "copy": {
+                        "name": "VM-Copy",
+                        "count": "[parameters('Cluster_Size')]"
+                    },
+                    "properties": {
+                        "hardwareProfile": {
+                            "vmSize": "Standard_F2s_v2"
+                        },
+                        "storageProfile": {
+                            "imageReference": {
+                                "publisher": "[variables('vmImage')[parameters('Operating_System')].publisher]",
+                                "offer": "[variables('vmImage')[parameters('Operating_System')].offer]",
+                                "sku": "[variables('vmImage')[parameters('Operating_System')].sku]",
+                                "version": "[variables('vmImage')[parameters('Operating_System')].version]"
+                            },
+                            "dataDisks": [],
+                            "osDisk": {
+                                "name": "[concat(variables('vmName'), 'OSDisk-', copyIndex())]",
+                                "createOption": "FromImage",
+                                "caching": "ReadWrite",
+                                "diskSizeGB": 30
+                            }
+                        },
+                        "osProfile": {
+                            "computerName": "[concat('My', parameters('Operating_System'), 'Agent-', copyIndex())]",
+                            "adminUserName": "[parameters('adminUserName')]",
+                            "linuxConfiguration": {
+                                "disablePasswordAuthentication": true,
+                                "provisionVMAgent": true,
+                                "ssh": {
+                                    "publicKeys": [
+                                        {
+                                            "path": "[concat('/home/', parameters('adminUserName'), '/.ssh/authorized_keys')]",
+                                            "keyData": "[parameters('KeyVault_AdminSsh')]"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "networkProfile": {
+                            "networkInterfaces": [
+                                {
+                                    "id": "[concat('/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/resourceGroups/', parameters('Prefix'), '-Network-RG/providers/Microsoft.Network/networkInterfaces/', parameters('Prefix'), '-NIC-', copyIndex())]",
+                                    "properties": {
+                                        "primary": true
+                                    }
+                                }
+                            ]
+                        },
+                        "diagnosticsProfile": {
+                            "bootDiagnostics": {
+                                "enabled": true,
+                                "storageUri": "[parameters('StorageAccount_BlobUri')]"
+                            }
+                        }
+                    }
+                }
+            ],
             "outputs": {}
         },
         "resourceGroup": "Compute-RG",
@@ -68,6 +140,9 @@
             },
             "Cluster_Size": {
                 "value": "[parameters('Cluster_Size')]"
+            },
+            "Operating_System": {
+                "value": "[parameters('Agent_OperatingSystem')]"
             },
             "KeyVault_Reference": {
                 "value": "[artifacts('artifact-template-keyvault--deploy').outputs.myKeyVaultId]"
@@ -87,6 +162,9 @@
                     },
                     "secretName": "adminSsh"
                 }
+            },
+            "StorageAccount_BlobUri": {
+                "value": "[artifacts('artifact-template-storage-account--deploy').outputs.storageAccountPrimaryEndpointsBlobUri]"
             }
         }
     }
