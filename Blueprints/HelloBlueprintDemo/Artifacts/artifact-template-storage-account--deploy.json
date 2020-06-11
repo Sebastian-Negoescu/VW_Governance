@@ -36,7 +36,17 @@
                         "supportsHttpsTrafficOnly": true
                     }
                 }
-            ]
+            ],
+            "outputs": {
+                "storageAccountId": {
+                    "type": "string",
+                    "value": "[resourceId('Microsoft.Storage/storageAccounts', variables('stgAcctName'))]"
+                },
+                "storageAccountPrimaryEndpointsBlobUri": {
+                    "type": "string",
+                    "value": "[reference(resourceId('Microsoft.Storage/storageAccounts', variables('stgAcctName')), '2019-06-01').primaryEndpoints.blob]"
+                }
+            }
         },
         "resourceGroup": "Storage-RG",
         "parameters": {
