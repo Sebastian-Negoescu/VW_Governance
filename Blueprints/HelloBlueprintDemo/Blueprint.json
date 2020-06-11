@@ -72,6 +72,10 @@
             },
             "KeyVault_AdminSsh": {
                 "type": "securestring"
+            },
+            "KeyVault_Name": {
+                "type": "string",
+                "defaultValue": "[concat(parameters('Prefix'), '-KeyVault')]"
             }
         },
         "resourceGroups": {

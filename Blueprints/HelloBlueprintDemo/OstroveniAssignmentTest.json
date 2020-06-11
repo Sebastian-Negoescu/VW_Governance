@@ -45,7 +45,7 @@
             "KeyVault_AdminPassword": {
                 "reference": {
                     "keyvault": {
-                        "id": "[concat('/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/resourceGroups/', parameters('Prefix'), '-Security-RG/providers/Microsoft.KeyVault/vaults/', parameters('Prefix'), '-KeyVault')]"
+                        "id": "[resourceId('Microsoft.KeyVault/vaults', parameters('KeyVault_Name'))]"
                     },
                     "secretName": "adminPwd"
                 }
@@ -53,8 +53,7 @@
             "KeyVault_AdminSsh": {
                 "reference": {
                     "keyvault": {
-                        "id": "[concat('/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/resourceGroups/', parameters('Prefix'), '-Security-RG/providers/Microsoft.KeyVault/vaults/', parameters('Prefix'), '-KeyVault')]"
-                    },
+                        "id": "[resourceId('Microsoft.KeyVault/vaults', parameters('KeyVault_Name'))]"                    },
                     "secretName": "adminSsh"
                 }
             }
