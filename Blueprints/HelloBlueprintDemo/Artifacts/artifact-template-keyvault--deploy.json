@@ -105,7 +105,7 @@
                 },
                 {
                     "type": "Microsoft.KeyVault/vaults/secrets",
-                    "apiVersion": "2019-04-01",
+                    "apiVersion": "2019-09-01",
                     "name": "[concat(variables('kvName'), '/adminSsh')]",
                     "location": "[parameters('Location')]",
                     "properties": {
