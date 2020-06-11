@@ -65,7 +65,7 @@
             },
             "resources": [
                 {
-                    "condition": "[equals(variables('vmImage')[parameters('Operating_System')], 'Linux')]",
+                    "condition": "[equals(parameters('Operating_System'), 'Linux')]",
                     "type": "Microsoft.Compute/virtualMachines",
                     "apiVersion": "2019-12-01",
                     "name": "[concat(variables('vmName'), copyIndex())]",
