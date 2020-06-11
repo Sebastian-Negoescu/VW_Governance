@@ -123,11 +123,11 @@
                 },
                 "myKeyVaultAdminPwdSecretId": {
                     "type": "string",
-                    "value": "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), 'adminPwd'))]"
+                    "value": "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), 'adminPwd')]"
                 },
                 "myKeyVaultAdminSshSecretId": {
                     "type": "string",
-                    "value": "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), 'adminSsh'))]"
+                    "value": "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), 'adminSsh')]"
                 }
             }
         },
