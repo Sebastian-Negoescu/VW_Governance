@@ -1,0 +1,93 @@
+{
+    "kind": "template",
+    "name": "schedule",
+    "properties": {
+        "displayName": "VM Schedule",
+        "description": "Schedule for VM Autho-Shutdown",
+        "dependsOn": [
+            "artifact-template-vm--deploy"
+        ],
+        "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "Prefix": {
+                    "type": "string"
+                },
+                "Location": {
+                    "type": "string"
+                },
+                "Cluster_Size": {
+                    "type": "int"
+                },
+                "Operating_System": {
+                    "type": "string",
+                    "allowedValues": [
+                        "Linux",
+                        "Windows"
+                    ]
+                }
+            },
+            "variables": {
+                "vmName": "[concat(parameters('Prefix'), '-VM-')]"
+            },
+            "resources": [
+                {
+                    "condition": "[equals(parameters('Operating_System'), 'Linux')]",
+                    "type": "Microsoft.DevTestLab/schedules",
+                    "apiVersion": "2016-05-15",
+                    "name": "[concat('shutdown-computevm-', variables('vmName'), 'Linux', copyIndex())]",
+                    "location": "[parameters('Location')]",
+                    "properties": {
+                        "status": "Enabled",
+                        "taskType": "ComputeVmShutdownTask",
+                        "dailyRecurrence": {
+                            "time": "1900"
+                        },
+                        "timeZoneId": "E. Europe Standard Time",
+                        "targetResourceId": "[concat('/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/resourceGroups/', parameters('Prefix'), '-Compute-RG/providers/Microsoft.Compute/virtualMachines/', variables('vmName'), 'Linux', copyIndex())]"
+                    },
+                    "copy": {
+                        "name": "LinuxVM-Copy",
+                        "count": "[parameters('Cluster_Size')]"
+                    }
+                },
+                {
+                    "condition": "[equals(parameters('Operating_System'), 'Windows')]",
+                    "type": "Microsoft.DevTestLab/schedules",
+                    "apiVersion": "2016-05-15",
+                    "name": "[concat('shutdown-computevm-', variables('vmName'), 'Windows', copyIndex())]",
+                    "location": "[parameters('Location')]",
+                    "properties": {
+                        "status": "Enabled",
+                        "taskType": "ComputeVmShutdownTask",
+                        "dailyRecurrence": {
+                            "time": "1900"
+                        },
+                        "timeZoneId": "E. Europe Standard Time",
+                        "targetResourceId": "[concat('/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/resourceGroups/', parameters('Prefix'), '-Compute-RG/providers/Microsoft.Compute/virtualMachines/', variables('vmName'), 'Windows', copyIndex())]"
+                    },
+                    "copy": {
+                        "name": "WindowsVM-Copy",
+                        "count": "[parameters('Cluster_Size')]"
+                    }
+                }
+            ]
+        },
+        "resourceGroup": "Compute-RG",
+        "parameters": {
+            "Prefix": {
+                "value": "[parameters('Prefix')]"
+            },
+            "Location": {
+                "value": "[parameters('Azure_Region')]"
+            },
+            "Cluster_Size": {
+                "value": "[parameters('Cluster_Size')]"
+            },
+            "Operating_System": {
+                "value": "[parameters('Agent_OperatingSystem')]"
+            }
+        }
+    }
+}
