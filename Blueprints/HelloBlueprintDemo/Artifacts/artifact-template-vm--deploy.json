@@ -157,7 +157,7 @@
                             "dataDisks": []
                         },
                         "osProfile": {
-                            "computerName": "[concat('My', parameters('Operating_System'), 'Agent-', copyIndex())]",
+                            "computerName": "[concat('My', parameters('Operating_System'), 'Agent', copyIndex())]",
                             "adminUserName": "[parameters('adminUserName')]",
                             "adminPassword": "[parameters('KeyVault_AdminPassword')]",
                             "windowsConfiguration": {
