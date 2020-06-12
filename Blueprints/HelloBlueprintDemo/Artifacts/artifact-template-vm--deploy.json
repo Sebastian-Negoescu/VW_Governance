@@ -152,7 +152,7 @@
                                 "createOption": "FromImage",
                                 "name": "[concat(variables('vmName'), 'OSDisk-', copyIndex())]",
                                 "caching": "ReadWrite",
-                                "diskSizeGB": 30
+                                "diskSizeGB": 128
                             },
                             "dataDisks": []
                         },
