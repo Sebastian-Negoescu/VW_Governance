@@ -97,7 +97,7 @@
                     "name": "[concat(variables('kvName'), '/adminPwd')]",
                     "location": "[parameters('Location')]",
                     "properties": {
-                        "value": "YourVMPwd"
+                        "value": "1.YourVMPwd$"
                     },
                     "dependsOn": [
                         "[resourceId('Microsoft.KeyVault/vaults', variables('kvName'))]"
