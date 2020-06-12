@@ -68,7 +68,7 @@
                     "condition": "[equals(parameters('Operating_System'), 'Linux')]",
                     "type": "Microsoft.Compute/virtualMachines",
                     "apiVersion": "2019-12-01",
-                    "name": "[concat(variables('vmName'), copyIndex())]",
+                    "name": "[concat(variables('vmName'), parameters('Operating_System'), copyIndex())]",
                     "location": "[parameters('Location')]",
                     "copy": {
                         "name": "VM-Copy_Linux",
@@ -131,7 +131,7 @@
                     "condition": "[equals(parameters('Operating_System'), 'Windows')]",
                     "type": "Microsoft.Compute/virtualMachines",
                     "apiVersion": "2019-12-01",
-                    "name": "[concat(variables('vmName'), copyIndex())]",
+                    "name": "[concat(variables('vmName'), parameters('Operating_System'), copyIndex())]",
                     "location": "[parameters('Location')]",
                     "copy": {
                         "name": "VM-Copy_Windows",
