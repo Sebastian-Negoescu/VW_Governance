@@ -71,7 +71,7 @@
                     "name": "[concat(variables('vmName'), copyIndex())]",
                     "location": "[parameters('Location')]",
                     "copy": {
-                        "name": "VM-Copy",
+                        "name": "VM-Copy_Linux",
                         "count": "[parameters('Cluster_Size')]"
                     },
                     "properties": {
@@ -107,6 +107,62 @@
                                         }
                                     ]
                                 }
+                            }
+                        },
+                        "networkProfile": {
+                            "networkInterfaces": [
+                                {
+                                    "id": "[concat('/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/resourceGroups/', parameters('Prefix'), '-Network-RG/providers/Microsoft.Network/networkInterfaces/', parameters('Prefix'), '-NIC-', copyIndex())]",
+                                    "properties": {
+                                        "primary": true
+                                    }
+                                }
+                            ]
+                        },
+                        "diagnosticsProfile": {
+                            "bootDiagnostics": {
+                                "enabled": true,
+                                "storageUri": "[parameters('StorageAccount_BlobUri')]"
+                            }
+                        }
+                    }
+                },
+                {
+                    "condition": "[equals(parameters('Operating_System'), 'Windows')]",
+                    "type": "Microsoft.Compute/virtualMachines",
+                    "apiVersion": "2019-12-01",
+                    "name": "[concat(variables('vmName'), copyIndex())]",
+                    "location": "[parameters('Location')]",
+                    "copy": {
+                        "name": "VM-Copy_Windows",
+                        "count": "[parameters('Cluster_Size')]"
+                    },
+                    "properties": {
+                        "hardwareProfile": {
+                            "vmSize": "Standard_F2s_v2"
+                        },
+                        "storageProfile": {
+                            "imageReference": {
+                                "publisher": "[variables('vmImage')[parameters('Operating_System')].publisher]",
+                                "offer": "[variables('vmImage')[parameters('Operating_System')].offer]",
+                                "sku": "[variables('vmImage')[parameters('Operating_System')].sku]",
+                                "version": "[variables('vmImage')[parameters('Operating_System')].version]"
+                            },
+                            "osDisk": {
+                                "createOption": "FromImage",
+                                "name": "[concat(variables('vmName'), 'OSDisk-', copyIndex())]",
+                                "caching": "ReadWrite",
+                                "diskSizeGB": 30
+                            },
+                            "dataDisks": []
+                        },
+                        "osProfile": {
+                            "computerName": "[concat('My', parameters('Operating_System'), 'Agent-', copyIndex())]",
+                            "adminUserName": "[parameters('adminUserName')]",
+                            "adminPassword": "[parameters('KeyVault_AdminPassword')]",
+                            "windowsConfiguration": {
+                                "provisionVMAgent": true,
+                                "enableAutomaticUpdates": true
                             }
                         },
                         "networkProfile": {
