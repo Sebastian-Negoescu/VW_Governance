@@ -1,0 +1,184 @@
+{
+    "kind": "template",
+    "name": "networksecuritygroup",
+    "properties": {
+        "displayName": "Network Security Group",
+        "description": "Network Security Group for Windows/Linux VMs. Rules are based depending on the OS you choose to deploy.",
+        "dependsOn": [
+            "artifact-template-vnet--deploy"
+        ],
+        "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "Prefix": {
+                    "type": "string"
+                },
+                "Location": {
+                    "type": "string"
+                },
+                "Operating_System": {
+                    "type": "string"
+                },
+                "Subnet_Ref": {
+                    "type": "string"
+                },
+                "VNet_Name": {
+                    "type": "string"
+                },
+                "Subnet_Name": {
+                    "type": "string"
+                },
+                "SubnetRef_AddressPrefix": {
+                    "type": "string"
+                }
+            },
+            "variables": {
+                "vmName": "[concat(parameters('Prefix'), '-VM-')]"
+            },
+            "resources": [
+                {
+                    "condition": "[equals(parameters('Operating_System'), 'Linux')]",
+                    "type": "Microsoft.Network/networkSecurityGroups",
+                    "apiVersion": "2020-03-01",
+                    "name": "[concat(variables('vmName'), 'Linux-NSG')]",
+                    "location": "[parameters('Location')]",
+                    "properties": {
+                        "securityRules": [
+                            {
+                                "name": "SSHAllow",
+                                "properties": {
+                                    "description": "Allow SSH Inbound Traffic on Port 22",
+                                    "protocol": "Tcp",
+                                    "access": "Allow",
+                                    "direction": "Inbound",
+                                    "priority": 100,
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "22",
+                                    "sourceAddressPrefix": "*",
+                                    "destinationAddressPrefix": "*",
+                                    "sourceApplicationSecurityGroups": [],
+                                    "destinationApplicationSecurityGroups": []
+                                }
+                            },
+                            {
+                                "name": "HTTPAllow",
+                                "properties": {
+                                    "description": "Allow HTTP Inbound Traffic on Port 80",
+                                    "protocol": "TCP",
+                                    "access": "Allow",
+                                    "direction": "Inbound",
+                                    "priority": 110,
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "80",
+                                    "sourceAddressPrefix": "*",
+                                    "destinationAddressPrefix": "*",
+                                    "sourceApplicationSecurityGroups": [],
+                                    "destinationApplicationSecurityGroups": []
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "condition": "[equals(parameters('Operating_System'), 'Windows')]",
+                    "type": "Microsoft.Network/networkSecurityGroups",
+                    "apiVersion": "2020-03-01",
+                    "name": "[concat(variables('vmName'), 'Windows-NSG')]",
+                    "location": "[parameters('Location')]",
+                    "properties": {
+                        "securityRules": [
+                            {
+                                "name": "RDPAllow",
+                                "properties": {
+                                    "description": "Allow RDP Inbound Traffic on Port 3389",
+                                    "protocol": "TCP",
+                                    "access": "Allow",
+                                    "direction": "Inbound",
+                                    "priority": 100,
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "3389",
+                                    "sourceAddressPrefix": "*",
+                                    "destinationAddressPrefix": "*",
+                                    "sourceApplicationSecurityGroups": [],
+                                    "destinationApplicationSecurityGroups": []
+                                }
+                            },
+                            {
+                                "name": "HTTPAllow",
+                                "properties": {
+                                    "description": "Allow HTTP Inbound Traffic on Port 80",
+                                    "protocol": "TCP",
+                                    "access": "Allow",
+                                    "direction": "Inbound",
+                                    "priority": 110,
+                                    "sourcePortRange": "*",
+                                    "destinationPortRange": "80",
+                                    "sourceAddressPrefix": "*",
+                                    "destinationAddressPrefix": "*",
+                                    "sourceApplicationSecurityGroups": [],
+                                    "destinationApplicationSecurityGroups": []
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "type": "Microsoft.Resources/deployments",
+                    "apiVersion": "2019-10-01",
+                    "name": "UpdateSubnetWithNSG",
+                    "location": "[parameters('Location')]",
+                    "dependsOn": [
+                        "[concat(variables('vmName'), parameters('Operating_System'), '-NSG')]"
+                    ],
+                    "properties": {
+                        "mode": "Incremental",
+                        "template": {
+                            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                            "contentVersion": "1.0.0.0",
+                            "resources": [
+                                {
+                                    "type": "Microsoft.Network/virtualNetworks/subnets",
+                                    "apiProfile": "2020-03-01",
+                                    "name": "[concat(parameters('VNet_Name'), '/', parameters('Subnet_Name'))]",
+                                    "location": "[parameters('Location')]",
+                                    "properties": {
+                                        "addressPrefix": "[parameters('SubnetRef_AddressPrefix')]",
+                                        "networkSecurityGroup": {
+                                            "id": "[concat('/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/resourceGroups/', parameters('Prefix'), '-Network-RG/providers/Microsoft.Network/networkSecurityGroups/', variables('vmName'), parameters('Operating_System'), '-NSG')]"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            ],
+            "outputs": {}
+        },
+        "resourceGroup": "Network-RG",
+        "parameters": {
+            "Prefix": {
+                "value": "[parameters('Prefix')]"
+            },
+            "Location": {
+                "value": "[parameters('Azure_Region')]"
+            },
+            "Operating_System": {
+                "value": "[parameters('Agent_OperatingSystem')]"
+            },
+            "Subnet_Ref": {
+                "value": "[artifacts('artifact-template-vnet--deploy').outputs.subnetId]"
+            },
+            "VNet_Name": {
+                "value": "[artifacts('artifact-template-vnet--deploy').outputs.vnetName_Output]"
+            },
+            "Subnet_Name": {
+                "value": "[artifacts('artifact-template-vnet--deploy').outputs.subnetName_Output]"
+            },
+            "SubnetRef_AddressPrefix": {
+                "value": "[reference(parameters('Subnet_Ref'), '2020-03-01').addressPrefix]"
+            }
+        }
+    }
+}
