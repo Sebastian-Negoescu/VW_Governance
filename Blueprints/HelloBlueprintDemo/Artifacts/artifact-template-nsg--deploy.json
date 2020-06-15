@@ -177,7 +177,7 @@
                 "value": "[artifacts('artifact-template-vnet--deploy').outputs.subnetName_Output]"
             },
             "SubnetRef_AddressPrefix": {
-                "value": "[reference(parameters('Subnet_Ref'), '2020-03-01').addressPrefix]"
+                "value": "[reference(artifacts('artifact-template-vnet--deploy').outputs.subnetId, '2020-03-01').addressPrefix]"
             }
         }
     }
