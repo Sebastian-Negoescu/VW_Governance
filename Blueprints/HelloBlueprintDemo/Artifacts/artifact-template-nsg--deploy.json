@@ -127,7 +127,7 @@
                     "type": "Microsoft.Resources/deployments",
                     "apiVersion": "2019-10-01",
                     "name": "UpdateSubnetWithNSG",
-                    "location": "[parameters('Location')]",
+                    "resourceGroup": "[concat(parameters('Prefix'), '-Network-RG')]",
                     "dependsOn": [
                         "[concat(variables('vmName'), parameters('Operating_System'), '-NSG')]"
                     ],
