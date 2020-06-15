@@ -53,6 +53,14 @@
                 "subnetId": {
                     "type": "string",
                     "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('subnetName'))]"
+                },
+                "vnetName_Output": {
+                    "type": "string",
+                    "value": "[variables('vnetName')]"
+                },
+                "subnetName_Output": {
+                    "type": "string",
+                    "value": "[variables('subnetName')]"
                 }
             }
         },
