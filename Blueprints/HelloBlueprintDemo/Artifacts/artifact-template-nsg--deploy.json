@@ -177,7 +177,7 @@
                 "value": "[artifacts('artifact-template-vnet--deploy').outputs.subnetName_Output]"
             },
             "SubnetRef_AddressPrefix": {
-                "value": "[reference(concat('/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/resourceGroups', parameters('Prefix'), '-Network-RG/providers/Microsoft.Network/virtualNetworks/', parameters('VNet_Name'), '/subnets/', parameters('Subnet_Name')), '2020-03-01').addressPrefix]"
+                "value": "[artifacts('artifact-template-vnet--deploy').outputs.Subnet_AddressPrefix]"
             }
         }
     }
