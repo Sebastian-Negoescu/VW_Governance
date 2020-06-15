@@ -34,7 +34,8 @@
                 }
             },
             "variables": {
-                "vmName": "[concat(parameters('Prefix'), '-VM-')]"
+                "vmName": "[concat(parameters('Prefix'), '-VM-')]",
+                "myMacBookIp": "86.120.248.86/32"
             },
             "resources": [
                 {
@@ -55,7 +56,7 @@
                                     "priority": 100,
                                     "sourcePortRange": "*",
                                     "destinationPortRange": "22",
-                                    "sourceAddressPrefix": "*",
+                                    "sourceAddressPrefix": "[variables('myMacBookIp')]",
                                     "destinationAddressPrefix": "*",
                                     "sourceApplicationSecurityGroups": [],
                                     "destinationApplicationSecurityGroups": []
@@ -71,7 +72,7 @@
                                     "priority": 110,
                                     "sourcePortRange": "*",
                                     "destinationPortRange": "80",
-                                    "sourceAddressPrefix": "*",
+                                    "sourceAddressPrefix": "[variables('myMacBookIp')]",
                                     "destinationAddressPrefix": "*",
                                     "sourceApplicationSecurityGroups": [],
                                     "destinationApplicationSecurityGroups": []
@@ -98,7 +99,7 @@
                                     "priority": 100,
                                     "sourcePortRange": "*",
                                     "destinationPortRange": "3389",
-                                    "sourceAddressPrefix": "*",
+                                    "sourceAddressPrefix": "[variables('myMacBookIp')]",
                                     "destinationAddressPrefix": "*",
                                     "sourceApplicationSecurityGroups": [],
                                     "destinationApplicationSecurityGroups": []
@@ -114,7 +115,7 @@
                                     "priority": 110,
                                     "sourcePortRange": "*",
                                     "destinationPortRange": "80",
-                                    "sourceAddressPrefix": "*",
+                                    "sourceAddressPrefix": "[variables('myMacBookIp')]",
                                     "destinationAddressPrefix": "*",
                                     "sourceApplicationSecurityGroups": [],
                                     "destinationApplicationSecurityGroups": []
