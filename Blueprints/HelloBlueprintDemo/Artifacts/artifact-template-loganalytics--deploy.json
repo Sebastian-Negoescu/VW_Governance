@@ -71,7 +71,131 @@
                             "legacy": 0,
                             "enableLogAccessUsingOnlyResourcePermissions": "[parameters('Resource_Permissions')]"
                         }
-                    }
+                    },
+                    "resources": [
+                        {
+                            "type": "datasources",
+                            "apiVersion": "2020-03-01-preview",
+                            "name": "WindowsEventsSystem",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                            ],
+                            "kind": "WindowsEvent",
+                            "properties": {
+                                "eventLogName": "System",
+                                "eventTypes": [
+                                    {
+                                        "eventType": "Error"
+                                    },
+                                    {
+                                        "eventType": "Warning"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "datasources",
+                            "apiVersion": "2020-03-01-preview",
+                            "name": "WindowsEventsApplication",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                            ],
+                            "kind": "WindowsEvent",
+                            "properties": {
+                                "eventLogName": "Application",
+                                "eventTypes": [
+                                    {
+                                        "eventType": "Error"
+                                    },
+                                    {
+                                        "eventType": "Warning"
+                                    },
+                                    {
+                                        "eventType": "Information"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "datasources",
+                            "apiVersion": "2020-03-01-preview",
+                            "name": "SyslogKern",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                            ],
+                            "kind": "LinuxSyslog",
+                            "properties": {
+                                "syslogName": "kern",
+                                "syslogSeverities": [
+                                    {
+                                        "severity": "emerg"
+                                    },
+                                    {
+                                        "severity": "alert"
+                                    },
+                                    {
+                                        "severity": "crit"
+                                    },
+                                    {
+                                        "severity": "err"
+                                    },
+                                    {
+                                        "severity": "warning"
+                                    },
+                                    {
+                                        "severity": "notice"
+                                    },
+                                    {
+                                        "severity": "info"
+                                    },
+                                    {
+                                        "severity": "debug"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "datasources",
+                            "apiVersion": "2020-03-01-preview",
+                            "name": "SyslogDaemon",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                            ],
+                            "kind": "LinuxSyslog",
+                            "properties": {
+                                "syslogName": "daemon",
+                                "syslogSeverities": [
+                                    {
+                                        "severity": "emerg"
+                                    },
+                                    {
+                                        "severity": "alert"
+                                    },
+                                    {
+                                        "severity": "crit"
+                                    },
+                                    {
+                                        "severity": "err"
+                                    },
+                                    {
+                                        "severity": "warning"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "datasources",
+                            "apiVersion": "2020-03-01-preview",
+                            "name": "SyslogCollection",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                            ],
+                            "kind": "LinuxSyslogCollection",
+                            "properties": {
+                                "state": "Enabled"
+                            }
+                        }
+                    ]
                 }
             ],
             "outputs": {
