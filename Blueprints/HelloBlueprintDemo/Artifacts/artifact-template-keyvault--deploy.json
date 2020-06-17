@@ -4,7 +4,9 @@
     "properties": {
         "displayName": "Key Vault",
         "description": "Key Vault that will contain the secrets used in our environment.",
-        "dependsOn": [],
+        "dependsOn": [
+            "artifact-template-loganalytics--deploy"
+        ],
         "template": {
             "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
             "contentVersion": "1.0.0.0",
@@ -16,6 +18,9 @@
                     "type": "string"
                 },
                 "KV-AccessPolicy": {
+                    "type": "string"
+                },
+                "LogAnalytics_WorkspacePrimaryKey": {
                     "type": "string"
                 }
             },
@@ -114,6 +119,18 @@
                     "dependsOn": [
                         "[resourceId('Microsoft.KeyVault/vaults', variables('kvName'))]"
                     ]
+                },
+                {
+                    "type": "Microsoft.KeyVault/vaults/secrets",
+                    "apiVersion": "2019-09-01",
+                    "name": "[concat(variables('kvName'), '/LogAnalyticsPrimaryKey')]",
+                    "location": "[parameters('Location')]",
+                    "properties": {
+                        "value": "[parameters('LogAnalytics_WorkspacePrimaryKey')]"
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.KeyVault/vaults', variables('kvName'))]"
+                    ]
                 }
             ],
             "outputs": {
@@ -141,6 +158,9 @@
             },
             "KV-AccessPolicy": {
                 "value": "[parameters('KV-AccessPolicy')]"
+            },
+            "LogAnalytics_WorkspacePrimaryKey": {
+                "value": "[artifacts('artifact-template-loganalytics--deploy').outputs.logAnalyticsPrimaryKey]"
             }
         }
     }
