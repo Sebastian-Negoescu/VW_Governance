@@ -57,7 +57,6 @@
             },
             "resources": [
                 {
-                    "comment": "### Should not be Operating_System related ###",
                     "type": "Microsoft.OperationalInsights/workspaces",
                     "apiVersion": "2020-03-01-preview",
                     "name": "[variables('workspaceName')]",
