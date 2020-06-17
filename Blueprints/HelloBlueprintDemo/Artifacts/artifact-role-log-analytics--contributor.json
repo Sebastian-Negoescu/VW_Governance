@@ -1,0 +1,12 @@
+{
+    "kind": "roleAssignment",
+    "properties": {
+        "displayName": "AzDevOps: Log Analytics Contributor",
+        "dependsOn": [],
+        "roleDefinitionId": "/providers/Microsoft.Authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293",
+        "principalIds": [
+            "[parameters('KV-AccessPolicy')]"
+        ],
+        "resourceGroup": "Storage-RG"
+    }
+}
