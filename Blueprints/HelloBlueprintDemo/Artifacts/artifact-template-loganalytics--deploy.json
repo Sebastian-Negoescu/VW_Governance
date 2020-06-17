@@ -50,6 +50,9 @@
                         "description": "'True' to use Resource or Workspace permissions. 'False' to require workspace permissions."
                     },
                     "defaultValue": true
+                },
+                "StorageAccount_Id": {
+                    "type": "string"
                 }
             },
             "variables": {
@@ -73,6 +76,19 @@
                         }
                     },
                     "resources": [
+                        {
+                            "type": "linkedStorageAccounts",
+                            "apiVersion": "2020-03-01-preview",
+                            "name": "CustomLogs",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                            ],
+                            "properties": {
+                                "storageAccountIds": [
+                                    "[parameters('StorageAccount_Id')]"
+                                ]
+                            }
+                        },
                         {
                             "type": "datasources",
                             "apiVersion": "2020-03-01-preview",
@@ -418,6 +434,9 @@
             },
             "Location": {
                 "value": "[parameters('Azure_Region')]"
+            },
+            "StorageAccount_Id": {
+                "value": "[artifacts('artifact-template-storage-account--deploy').outputs.storageAccountId]"
             }
         }
     }
