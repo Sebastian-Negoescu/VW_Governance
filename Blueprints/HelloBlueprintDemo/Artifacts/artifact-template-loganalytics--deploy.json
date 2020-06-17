@@ -194,6 +194,208 @@
                             "properties": {
                                 "state": "Enabled"
                             }
+                        },
+                        {
+                            "type": "datasources",
+                            "apiVersion": "2020-03-01-preview",
+                            "name": "WindowsPerfMemoryAvailableBytes",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                            ],
+                            "kind": "WindowsPerformanceCounter",
+                            "properties": {
+                                "objectName": "Memory",
+                                "instanceName": "*",
+                                "intervalSeconds": 10,
+                                "counterName": "Available MBytes"
+                            }
+                        },
+                        {
+                            "type": "datasources",
+                            "apiVersion": "2020-03-01-preview",
+                            "name": "WindowsPerfMemoryPercentageBytes",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                            ],
+                            "kind": "WindowsPerformanceCounter",
+                            "properties": {
+                                "objectName": "Memory",
+                                "instanceName": "*",
+                                "intervalSeconds": 10,
+                                "counterName": "% Committed Bytes in Use"
+                            }
+                        },
+                        {
+                            "type": "datasources",
+                            "apiVersion": "2020-03-01-preview",
+                            "name": "WindowsPerfProcessorPercentage",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                            ],
+                            "kind": "WindowsPerformanceCounter",
+                            "properties": {
+                                "objectName": "Processor",
+                                "instanceName": "_Total",
+                                "intervalSeconds": 10,
+                                "counterName": "% Processor Time"
+                            }
+                        },
+                        {
+                            "type": "datasources",
+                            "apiVersion": "2020-03-01-preview",
+                            "name": "LinuxPerformanceLogicalDisk",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                            ],
+                            "kind": "LinuxPerformanceObject",
+                            "properties": {
+                                "objectName": "Logical Disk",
+                                "instanceName": "*",
+                                "intervalSeconds": 10,
+                                "performanceCounters": [
+                                    {
+                                        "counterName": "% Used Inodes"
+                                    },
+                                    {
+                                        "counterName": "Free Megabytes"
+                                    },
+                                    {
+                                        "counterName": "% Used Space"
+                                    },
+                                    {
+                                        "counterName": "Disk Transfers/sec"
+                                    },
+                                    {
+                                        "counterName": "Disk Reads/sec"
+                                    },
+                                    {
+                                        "counterName": "Disk Writes/sec"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "datasources",
+                            "apiVersion": "2020-03-01-preview",
+                            "name": "LinuxPerformanceProcessor",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                            ],
+                            "kind": "LinuxPerformanceObject",
+                            "properties": {
+                                "objectName": "Processor",
+                                "instanceName": "*",
+                                "intervalSeconds": 10,
+                                "performanceCounters": [
+                                    {
+                                        "counterName": "% Processor Time"
+                                    },
+                                    {
+                                        "counterName": "% Privileged Time"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "datasources",
+                            "apiVersion": "2020-03-01-preview",
+                            "name": "[concat(toLower(variables('workspaceName'), 'armlog_timedelimited'))]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                            ],
+                            "kind": "CustomLog",
+                            "properties": {
+                                "customLogName": "armlog_timedelimited",
+                                "description": "ARM Log Delimited datasource",
+                                "inputs": [
+                                    {
+                                        "location": {
+                                            "fileSystemLocations": {
+                                                "linuxFileTypeLogPaths": ["/var/logs"],
+                                                "windowsFileTypeLogPaths": ["c:\\Windows\\Logs\\*.txt"]
+                                            }
+                                        },
+                                        "recordDelimiter": {
+                                            "regexDelimiter": {
+                                                "matchIndex": 0,
+                                                "numberdGroup": null,
+                                                "pattern": "(^.*((\\d{2})|(\\d{4}))-([0-1]\\d)-(([0-3]\\d)|(\\d))\\s((\\d)|([0-1]\\d)|(2[0-4])):[0-5][0-9]:[0-5][0-9].*$)"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "extractions": [
+                                    {
+                                        "extractionName": "TimeGenerated",
+                                        "extractionProperties": {
+                                            "dateTimeExtraction": {
+                                                "regex": [
+                                                    {
+                                                        "matchIndex": 0,
+                                                        "numberdGroup": null,
+                                                        "pattern": "((\\d{2})|(\\d{4}))-([0-1]\\d)-(([0-3]\\d)|(\\d))\\s((\\d)|([0-1]\\d)|(2[0-4])):[0-5][0-9]:[0-5][0-9]"
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "extractionType": "DateTime"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "datasources",
+                            "apiVersion": "2020-03-01-preview",
+                            "name": "[concat(toLower(variables('workspaceName'), 'armlog_newline'))]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                            ],
+                            "kind": "CustomLog",
+                            "properties": {
+                                "customLogName": "armlog_newline",
+                                "description": "ARM Log NewLine Datasource",
+                                "inputs": [
+                                    {
+                                        "location": {
+                                            "fileSystemLocations": {
+                                                "linuxFileTypeLogPaths": ["/var/logs"],
+                                                "windowsFileTypeLogPaths": ["c:\\Windows\\Logs\\*.txt"]
+                                            }
+                                        },
+                                        "recordDelimiter": {
+                                            "regexDelimiter": {
+                                                "pattern": "\\n",
+                                                "matchIndex": 0,
+                                                "numberdGroup": null
+                                            }
+                                        }
+                                    }
+                                ],
+                                "extractions": [
+                                    {
+                                        "extractionName": "TimeGenerated",
+                                        "extractionType": "DateTime",
+                                        "extractionProperties": {
+                                            "dateTimeExtraction": {
+                                                "regex": null,
+                                                "joinStringRegex": null
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "type": "datasources",
+                            "apiVersion": "2020-03-01-preview",
+                            "name": "IISLogs",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                            ],
+                            "kind": "IISLogs",
+                            "properties": {
+                                "state": "Enabled"
+                            }
                         }
                     ]
                 }
