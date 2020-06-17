@@ -394,7 +394,7 @@
                             ],
                             "kind": "IISLogs",
                             "properties": {
-                                "state": "Enabled"
+                                "state": "OnPremiseEnabled"
                             }
                         }
                     ]
