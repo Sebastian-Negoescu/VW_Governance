@@ -135,6 +135,7 @@
                     },
                     "resources": [
                         {
+                            "condition": "[equals(parameters('Operating_System'), 'Linux')]",
                             "type": "extensions",
                             "name": "OMSExtension",
                             "apiVersion": "2019-12-01",
@@ -213,9 +214,10 @@
                     },
                     "resources": [
                         {
+                            "condition": "[equals(parameters('Operating_System'), 'Windows')]",
                             "type": "extensions",
                             "apiVersion": "2019-12-01",
-                            "name": "OMSExtension",
+                            "name": "MMAExtension",
                             "location": "[parameters('Location')]",
                             "dependsOn": [
                                 "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Windows', copyIndex()))]"
