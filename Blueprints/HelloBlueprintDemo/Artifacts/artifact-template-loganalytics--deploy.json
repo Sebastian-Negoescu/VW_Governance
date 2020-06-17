@@ -1,0 +1,99 @@
+{
+    "kind": "template",
+    "name": "loganalytics",
+    "properties": {
+        "displayName": "Log Analytics",
+        "description": "Log Analytics workspace for storing logs regarding: availability, performance, security vulnerabilities, etc.",
+        "dependsOn": [
+            "artifact-template-storage-account--deploy"
+        ],
+        "template": {
+            "$schema": "http://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "Prefix": {
+                    "type": "string"
+                },
+                "Location": {
+                    "type": "string"
+                },
+                "RetentionPeriod": {
+                    "type": "int",
+                    "minValue": 0,
+                    "maxValue": 365,
+                    "metadata": {
+                        "displayName": "Retention Days Period",
+                        "description": "The number of days that the Log Analytics workspace should keep the data."
+                    },
+                    "defaultValue": 180
+                },
+                "Workspace_SKU": {
+                    "type": "string",
+                    "metadata": {
+                        "displayName": "Workspace SKU",
+                        "description": "The SKU of the Log Analytics Workspace."
+                    },
+                    "allowedValues": [
+                        "pergb2018",
+                        "Free",
+                        "Standalone",
+                        "PerNode",
+                        "Standard",
+                        "Premium"
+                    ],
+                    "defaultValue": "pergb2018"
+                },
+                "Resource_Permissions": {
+                    "type": "bool",
+                    "metadata": {
+                        "displayName": "Resource Permission",
+                        "description": "'True' to use Resource or Workspace permissions. 'False' to require workspace permissions."
+                    },
+                    "defaultValue": true
+                }
+            },
+            "variables": {
+                "workspaceName": "[concat(parameters('Prefix'), '-LogAnalytics')]"
+            },
+            "resources": [
+                {
+                    "comment": "### Should not be Operating_System related ###",
+                    "type": "Microsoft.OperationalInsights/workspaces",
+                    "apiVersion": "2020-03-01-preview",
+                    "name": "[variables('workspaceName')]",
+                    "location": "[parameters('Location')]",
+                    "properties": {
+                        "sku": {
+                            "name": "[parameters('Workspace_SKU')]"
+                        },
+                        "retentionInDays": "[parameters('Retention_Period')]",
+                        "features": {
+                            "searchVersion": 1,
+                            "legacy": 0,
+                            "enableLogAccessUsingOnlyResourcePermissions": "[parameters('Resource_Permissions')]"
+                        }
+                    }
+                }
+            ],
+            "outputs": {
+                "logAnalyticsId": {
+                    "type": "string",
+                    "value": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                },
+                "logAnalyticsPrimaryKey": {
+                    "type": "string",
+                    "value": "[listKeys(resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName')), '2020-03-01-preview').primarySharedKey]"
+                }
+            }
+        },
+        "resourceGroup": "Storage-RG",
+        "parameters": {
+            "Prefix": {
+                "value": "[parameters('Prefix')]"
+            },
+            "Location": {
+                "value": "[parameters('Azure_Region')]"
+            }
+        }
+    }
+}
