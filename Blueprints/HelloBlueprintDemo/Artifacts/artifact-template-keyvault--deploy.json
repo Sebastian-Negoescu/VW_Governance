@@ -20,7 +20,7 @@
                 "KV-AccessPolicy": {
                     "type": "string"
                 },
-                "LogAnalytics_WorkspacePrimaryKey": {
+                "LogAnalytics_PrimaryKey": {
                     "type": "string"
                 }
             },
@@ -126,7 +126,7 @@
                     "name": "[concat(variables('kvName'), '/LogAnalyticsPrimaryKey')]",
                     "location": "[parameters('Location')]",
                     "properties": {
-                        "value": "[parameters('LogAnalytics_WorkspacePrimaryKey')]"
+                        "value": "[parameters('LogAnalytics_PrimaryKey')]"
                     },
                     "dependsOn": [
                         "[resourceId('Microsoft.KeyVault/vaults', variables('kvName'))]"
@@ -159,7 +159,7 @@
             "KV-AccessPolicy": {
                 "value": "[parameters('KV-AccessPolicy')]"
             },
-            "LogAnalytics_WorkspacePrimaryKey": {
+            "LogAnalytics_PrimaryKey": {
                 "value": "[artifacts('artifact-template-loganalytics--deploy').outputs.logAnalyticsPrimaryKey]"
             }
         }
