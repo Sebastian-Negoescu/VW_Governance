@@ -417,9 +417,9 @@
                 }
             ],
             "outputs": {
-                "logAnalyticsId": {
+                "logAnalyticsCustomerId": {
                     "type": "string",
-                    "value": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName'))]"
+                    "value": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName')), '2020-03-01-preview').customerId]"
                 },
                 "logAnalyticsPrimaryKey": {
                     "type": "string",
