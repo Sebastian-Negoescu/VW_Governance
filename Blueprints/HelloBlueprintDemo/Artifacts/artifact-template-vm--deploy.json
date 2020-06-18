@@ -219,7 +219,7 @@
                     "condition": "[equals(parameters('Operating_System'), 'Windows')]",
                     "type": "Microsoft.Compute/virtualMachines/extensions",
                     "apiVersion": "2019-12-01",
-                    "name": "[concat(variables('vmName'), 'Windows', copyIndex, '/OMSWindows')]",
+                    "name": "[concat(variables('vmName'), 'Windows', copyIndex(), '/OMSWindows')]",
                     "location": "[parameters('Location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Windows', copyIndex()))]"
