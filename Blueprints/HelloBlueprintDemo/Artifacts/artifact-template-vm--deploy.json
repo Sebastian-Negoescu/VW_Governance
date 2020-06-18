@@ -160,6 +160,26 @@
                     }
                 },
                 {
+                    "condition": "[equals(parameters('Operating_System'), 'Linux')]",
+                    "type": "Microsoft.Compute/virtualMachines/extensions",
+                    "apiVersion": "2019-12-01",
+                    "name": "[concat(variables('vmName'), 'Linux', copyIndex(), '/LinuxDependencyAgent')]",
+                    "location": "[parameters('Location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]"
+                    ],
+                    "copy": {
+                        "name": "DIAGExtensionLinux-Copy",
+                        "count": "[parameters('Cluster_Size')]"
+                    },
+                    "properties": {
+                        "publisher": "Microsoft.Azure.Monitoring.DependencyAgent",
+                        "type": "DependencyAgentLinux",
+                        "typeHandlerVersion": "9.5",
+                        "autoUpgradeMinorVersion": true
+                    }
+                },
+                {
                     "condition": "[equals(parameters('Operating_System'), 'Windows')]",
                     "type": "Microsoft.Compute/virtualMachines",
                     "apiVersion": "2019-12-01",
@@ -239,6 +259,26 @@
                         "protectedSettings": {
                             "workspaceKey": "[parameters('LogAnalytics_WorkspacePrimaryKey')]"
                         }
+                    }
+                },
+                {
+                    "condition": "[equals(parameters('Operating_System'), 'Windows')]",
+                    "type": "Microsoft.Compute/virtualMachines/extensions",
+                    "apiVersion": "2019-12-01",
+                    "name": "[concat(variables('vmName'), 'Windows', copyIndex(), '/WindowsDependencyAgent')]",
+                    "location": "[parameters('Location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines'), concat(variables('vmName'), 'Windows', copyIndex()))]"
+                    ],
+                    "copy": {
+                        "name": "DIAGExtensionWindows-Copy",
+                        "count": "[parameters('Cluster_Size')]"
+                    },
+                    "properties": {
+                        "publisher": "Microsoft.Azure.Monitoring.DependencyAgent",
+                        "type": "DependencyAgentWindows",
+                        "typeHandlerVersion": "9.5",
+                        "autoUpgradeMinorVersion": true
                     }
                 }
             ],
