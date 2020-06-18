@@ -132,30 +132,32 @@
                                 "storageUri": "[parameters('StorageAccount_BlobUri')]"
                             }
                         }
+                    }
+                },
+                {
+                    "condition": "[equals(parameters('Operating_System'), 'Linux')]",
+                    "type": "Microsoft.Compute/virtualMachines/extensions",
+                    "apiVersion": "2019-12-01",
+                    "name": "[concat(variables('vmName'), 'Linux', copyIndex(), '/OMSLinux')]",
+                    "location": "[parameters('Location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]"
+                    ],
+                    "copy": {
+                        "name": "OMSExtension-Copy",
+                        "count": "[parameters('Cluster_Size')]"
                     },
-                    "resources": [
-                        {
-                            "condition": "[equals(parameters('Operating_System'), 'Linux')]",
-                            "type": "extensions",
-                            "name": "OMSExtension",
-                            "apiVersion": "2019-12-01",
-                            "location": "[parameters('Location')]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]"
-                            ],
-                            "properties": {
-                                "publisher": "Microsoft.EnterpriseCloud.Monitoring",
-                                "type": "OmsAgentForLinux",
-                                "typeHandlerVersion": "1.7",
-                                "settings": {
-                                    "workspaceId": "[parameters('LogAnalytics_WorkspaceId')]"
-                                },
-                                "protectedSettings": {
-                                    "workspaceKey": "[parameters('LogAnalytics_WorkspacePrimaryKey')]"
-                                }
-                            }
+                    "properties": {
+                        "publisher": "Microsoft.EnterpriseCloud.Monitoring",
+                        "type": "OmsAgentForLinux",
+                        "typeHandlerVersion": "1.7",
+                        "settings": {
+                            "workspaceId": "[parameters('LogAnalytics_WorkspaceId')]"
+                        },
+                        "protectedSettings": {
+                            "workspaceKey": "[parameters('LogAnalytics_WorkspacePrimaryKey')]"
                         }
-                    ]
+                    }
                 },
                 {
                     "condition": "[equals(parameters('Operating_System'), 'Windows')]",
@@ -211,31 +213,33 @@
                                 "storageUri": "[parameters('StorageAccount_BlobUri')]"
                             }
                         }
+                    }
+                },
+                {
+                    "condition": "[equals(parameters('Operating_System'), 'Windows')]",
+                    "type": "Microsoft.Compute/virtualMachines/extensions",
+                    "apiVersion": "2019-12-01",
+                    "name": "[concat(variables('vmName'), 'Windows', copyIndex, '/OMSWindows')]",
+                    "location": "[parameters('Location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Windows', copyIndex()))]"
+                    ],
+                    "copy": {
+                        "name": "MMAExtension-Copy",
+                        "count": "[parameters('Cluster_Size')]"
                     },
-                    "resources": [
-                        {
-                            "condition": "[equals(parameters('Operating_System'), 'Windows')]",
-                            "type": "extensions",
-                            "apiVersion": "2019-12-01",
-                            "name": "MMAExtension",
-                            "location": "[parameters('Location')]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Windows', copyIndex()))]"
-                            ],
-                            "properties": {
-                                "publisher": "Microsoft.EnterpriseCloud.Monitoring",
-                                "type": "MicrosoftMonitoringAgent",
-                                "typeHandlerVersion": "1.0",
-                                "autoUpgradeMinorVersion": true,
-                                "settings": {
-                                    "workspaceId": "[parameters('LogAnalytics_WorkspaceId')]"
-                                },
-                                "protectedSettings": {
-                                    "workspaceKey": "[parameters('LogAnalytics_WorkspacePrimaryKey')]"
-                                }
-                            }
+                    "properties": {
+                        "publisher": "Microsoft.EnterpriseCloud.Monitoring",
+                        "type": "MicrosoftMonitoringAgent",
+                        "typeHandlerVersion": "1.0",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "workspaceId": "[parameters('LogAnalytics_WorkspaceId')]"
+                        },
+                        "protectedSettings": {
+                            "workspaceKey": "[parameters('LogAnalytics_WorkspacePrimaryKey')]"
                         }
-                    ]
+                    }
                 }
             ],
             "outputs": {}
@@ -277,7 +281,7 @@
                 "value": "[artifacts('artifact-template-storage-account--deploy').outputs.storageAccountPrimaryEndpointsBlobUri]"
             },
             "LogAnalytics_WorkspaceId": {
-                "value": "[artifacts('artifact-template-loganalytics--deploy').outputs.logAnalyticsId]"
+                "value": "[artifacts('artifact-template-loganalytics--deploy').outputs.logAnalyticsCustomerId]"
             },
             "LogAnalytics_WorkspacePrimaryKey": {
                 "reference": {
