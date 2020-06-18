@@ -222,5 +222,10 @@ stages:
               ScriptType: "InlineScript"
               Inline: | 
                 Write-Host "Clean resources deployed through the Test Version Deployment"
-                Get-AzResourceGroup | Where-Object ResourceGroupName -like "DEV-$(organization)*" | Remove-AzResourceGroup -Force
+                ### Removing RGs with name-showing in order to see which one fails and why
+                $rgs = Get-AzResourceGroup | Where-Object ResourceGroupName -like "DEV-$(organization)*"
+                ForEach ($rg in $rgs) {
+                  Write-Host "Deleting $($rg.ResourceGroupName)..."
+                  Remove-AzResourceGroup $rg.ResourceGroupName -Force -Confirm:$false
+                }
                 Write-Host "Pipeline finished. See you later!"
