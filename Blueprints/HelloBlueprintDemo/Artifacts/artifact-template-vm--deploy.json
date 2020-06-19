@@ -317,7 +317,7 @@
                         },
                         "protectedSettings": {
                             "storageAccountName": "[parameters('StorageAccount_Name')]",
-                            "storageAccountKey": "[listKeys(parameters('StorageAccount_Id'), '2019-06-01').key1]",
+                            "storageAccountKey": "[listKeys(parameters('StorageAccount_Id'), '2019-06-01').keys[0].value]",
                             "storageAccountEndPoint": "https://core.windows.net"
                         }
                     }
