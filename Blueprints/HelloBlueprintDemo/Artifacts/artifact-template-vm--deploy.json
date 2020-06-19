@@ -57,6 +57,20 @@
                 },
                 "StorageAccount_Id": {
                     "type": "string"
+                },
+                "sasRequestBody": {
+                    "type": "object",
+                    "defaultValue": {
+                        "signedServices": "b",
+                        "signedResourceTypes": "s",
+                        "signedPermission": "rwdlac",
+                        "signedProtocol": "https,https",
+                        "signedExpiry": "2020-06-19T21:00:00Z"
+                    },
+                    "metadata": {
+                        "displayName": "SAS Token Request Body",
+                        "description": "Request Body necessary for SAS Token retrieval with the 'listAccountSas()' function."
+                    }
                 }
             },
             "variables": {
@@ -212,7 +226,7 @@
                         "protectedSettings": {
                             "storageAccountName": "[parameters('StorageAccount_Name')]",
                             "storageAccountEndPoint": "https://core.windows.net",
-                            "storageAccountSasToken": "[listAccountSas(parameters('StorageAccount_Id'), '2019-06-01').accountSasToken]"
+                            "storageAccountSasToken": "[listAccountSas(parameters('StorageAccount_Id'), '2019-06-01', parameters('sasRequestBody')).accountSasToken]"
                         },
                         "settings": {
                             "StorageAccount": "[parameters('StorageAccount_Name')]",
