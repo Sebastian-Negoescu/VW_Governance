@@ -220,7 +220,7 @@
                     },
                     "properties": {
                         "publisher": "Microsoft.Azure.Diagnostics",
-                        "type": "LinuxDiagnostics",
+                        "type": "LinuxDiagnostic",
                         "typeHandlerVersion": "3.0",
                         "autoUpgradeMinorVersion": true,
                         "protectedSettings": {
