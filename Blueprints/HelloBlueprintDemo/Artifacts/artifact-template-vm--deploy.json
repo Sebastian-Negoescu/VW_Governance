@@ -64,7 +64,7 @@
                         "signedServices": "bt",
                         "signedResourceTypes": "cos",
                         "signedPermission": "racwdlup",
-                        "signedProtocol": "https,https",
+                        "signedProtocol": "https,http",
                         "signedExpiry": "2020-09-19T21:00:00Z",
                         "keyToSign": "key1"
                     },
