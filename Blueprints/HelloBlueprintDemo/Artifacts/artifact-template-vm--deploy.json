@@ -57,9 +57,6 @@
                 },
                 "StorageAccount_Id": {
                     "type": "string"
-                },
-                "StorageAccount_RG": {
-                    "type": "string"
                 }
             },
             "variables": {
@@ -380,9 +377,6 @@
             },
             "StorageAccount_Id": {
                 "value": "[artifacts('artifact-template-storage-account--deploy').outputs.storageAccountId]"
-            },
-            "StorageAccount_RG": {
-                "value": "[resourceGroups('Storage-RG').name]"
             }
         }
     }
