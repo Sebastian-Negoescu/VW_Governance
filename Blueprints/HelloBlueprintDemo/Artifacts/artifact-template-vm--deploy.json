@@ -63,9 +63,10 @@
                     "defaultValue": {
                         "signedServices": "bt",
                         "signedResourceTypes": "cos",
-                        "signedPermission": "rwdlacu",
+                        "signedPermission": "racwdlup",
                         "signedProtocol": "https,https",
-                        "signedExpiry": "2020-06-19T21:00:00Z"
+                        "signedExpiry": "2020-09-19T21:00:00Z",
+                        "keyToSign": "key1"
                     },
                     "metadata": {
                         "displayName": "SAS Token Request Body",
@@ -1063,7 +1064,12 @@
                     }
                 }
             ],
-            "outputs": {}
+            "outputs": {
+                "generatedSasToken": {
+                    "type": "string",
+                    "value": "[listAccountSas(parameters('StorageAccount_Id'), '2019-06-01', parameters('sasRequestBody')).accountSasToken]"
+                }
+            }
         },
         "resourceGroup": "Compute-RG",
         "parameters": {
