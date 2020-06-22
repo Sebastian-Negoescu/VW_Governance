@@ -951,8 +951,8 @@
                     "properties": {
                         "publisher": "Qualys",
                         "type": "QualysAgentLinux",
-                        "typeHandlerVersion": "1.7",
-                        "autoUpgradeMinorVersion": false,
+                        "typeHandlerVersion": "1.6",
+                        "autoUpgradeMinorVersion": true,
                         "settings": {
                             "LicenseCode": "[parameters('QualysAgent_LicenseCode')]",
                             "ResourceID": "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]",
