@@ -951,7 +951,7 @@
                     "properties": {
                         "publisher": "Qualys",
                         "type": "QualysAgentLinux",
-                        "typeHandlerVersion": "1.6",
+                        "typeHandlerVersion": "1.7",
                         "autoUpgradeMinorVersion": false,
                         "settings": {
                             "LicenseCode": "[parameters('QualysAgent_LicenseCode')]",
