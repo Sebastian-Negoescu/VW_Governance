@@ -72,6 +72,9 @@
                         "displayName": "SAS Token Request Body",
                         "description": "Request Body necessary for SAS Token retrieval with the 'listAccountSas()' function."
                     }
+                },
+                "QualysAgent_LicenseCode": {
+                    "type": "string"
                 }
             },
             "variables": {
@@ -933,6 +936,32 @@
                     }
                 },
                 {
+                    "condition": "[equals(parameters('Operating_System'), 'Linux')]",
+                    "type": "Microsoft.Compute/virtualMachines/extensions",
+                    "apiVersion": "2019-12-01",
+                    "name": "[concat(variables('vmName'), 'Linux', copyIndex(), '/QualysAgentLinux')]",
+                    "location": "[parameters('Location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]"
+                    ],
+                    "copy": {
+                        "name": "QualysAgentLinux-Copy",
+                        "count": "[parameters('Cluster_Size')]"
+                    },
+                    "properties": {
+                        "publisher": "Qualys",
+                        "type": "QualysAgentLinux",
+                        "typeHandlerVersion": "1.6",
+                        "autoUpgradeMinorVersion": false,
+                        "settings": {
+                            "LicenseCode": "[parameters('QualysAgent_LicenseCode')]",
+                            "ResourceID": "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]",
+                            "VmRegion": "[parameters('Location')]",
+                            "Logging": "Enabled"
+                        }
+                    }
+                },
+                {
                     "condition": "[equals(parameters('Operating_System'), 'Windows')]",
                     "type": "Microsoft.Compute/virtualMachines",
                     "apiVersion": "2019-12-01",
@@ -1062,6 +1091,32 @@
                             "storageAccountEndPoint": "https://core.windows.net"
                         }
                     }
+                },
+                {
+                    "condition": "[equals(parameters('Operating_System'), 'Windows')]",
+                    "type": "Microsoft.Compute/virtualMachines/extensions",
+                    "apiVersion": "2019-12-01",
+                    "name": "[concat(variables('vmName'), 'Windows', copyIndex(), '/QualysAgentWindows')]",
+                    "location": "[parameters('Location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Windows', copyIndex()))]"
+                    ],
+                    "copy": {
+                        "name": "QualysAgentWindows-Copy",
+                        "count": "[parameters('Cluster_Size')]"
+                    },
+                    "properties": {
+                        "publisher": "Qualys",
+                        "type": "QualysAgent",
+                        "typeHandlerVersion": "1.6",
+                        "autoUpgradeMinorVersion": false,
+                        "settings": {
+                            "LicenseCode": "[parameters('QualysAgent_LicenseCode')]",
+                            "ResourceID": "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Windows', copyIndex()))]",
+                            "VmRegion": "[parameters('Location')]",
+                            "Logging": "Enabled"
+                        }
+                    }
                 }
             ],
             "outputs": {
@@ -1123,6 +1178,9 @@
             },
             "StorageAccount_Id": {
                 "value": "[artifacts('artifact-template-storage-account--deploy').outputs.storageAccountId]"
+            },
+            "QualysAgent_LicenseCode": {
+                "value": "sdfkhjsajhdflkjsaghdlfks.ldkfhslhdf;lsahkjdlkjfhsadkjhfkjhfkjsdhfkjdshfhidhsfkj"
             }
         }
     }
