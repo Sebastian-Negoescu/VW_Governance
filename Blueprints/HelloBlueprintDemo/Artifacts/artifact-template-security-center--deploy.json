@@ -6,7 +6,7 @@
         "description": "This template enabled the Standard tier of the Azure Security Center.",
         "dependsOn": [],
         "template": {
-            "$schena": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+            "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
             "contentVersion": "1.0.0.0",
             "parameters": {},
             "variables": {},
