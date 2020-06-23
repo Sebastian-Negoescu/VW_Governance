@@ -199,7 +199,8 @@
                     "name": "[concat(variables('vmName'), 'Linux', copyIndex(), '/LinuxDependencyAgent')]",
                     "location": "[parameters('Location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]"
+                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]",
+                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()), 'OMSLinux')]"
                     ],
                     "copy": {
                         "name": "DependencyExtensionLinux-Copy",
@@ -219,7 +220,8 @@
                     "name": "[concat(variables('vmName'), 'Linux', copyIndex(), '/LinuxDiagnostics')]",
                     "location": "[parameters('Location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]"
+                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]",
+                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()), 'LinuxDependencyAgent')]"
                     ],
                     "copy": {
                         "name": "DIAGExtensionLinux-Copy",
