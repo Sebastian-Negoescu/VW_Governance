@@ -75,6 +75,9 @@
                 },
                 "QualysAgent_LicenseCode": {
                     "type": "string"
+                },
+                "QualysAgentLinux_LicenseCode": {
+                    "type": "string"
                 }
             },
             "variables": {
@@ -936,7 +939,7 @@
                     }
                 },
                 {
-                    "condition": "[equals(parameters('Operating_System'), 'Linux')]",
+                    "condition": "[and(equals(parameters('Operating_System'), 'Linux'), not(empty(parameters('QualysAgentLinux_LicenseCode'))))]",
                     "type": "Microsoft.Compute/virtualMachines/extensions",
                     "apiVersion": "2019-12-01",
                     "name": "[concat(variables('vmName'), 'Linux', copyIndex(), '/QualysAgentLinux')]",
@@ -1181,6 +1184,9 @@
             },
             "QualysAgent_LicenseCode": {
                 "value": "sdfkhjsajhdflkjsaghdlfks.ldkfhslhdf;lsahkjdlkjfhsadkjhfkjhfkjsdhfkjdshfhidhsfkj"
+            },
+            "QualysAgentLinux_LicenseCode": {
+                "value": ""
             }
         }
     }
