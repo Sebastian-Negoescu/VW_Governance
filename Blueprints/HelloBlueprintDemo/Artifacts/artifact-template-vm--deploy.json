@@ -957,7 +957,7 @@
                         "typeHandlerVersion": "1.6",
                         "autoUpgradeMinorVersion": true,
                         "settings": {
-                            "LicenseCode": "[parameters('QualysAgent_LicenseCode')]",
+                            "LicenseCode": "[parameters('QualysAgentLinux_LicenseCode')]",
                             "ResourceID": "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]",
                             "VmRegion": "[parameters('Location')]",
                             "Logging": "Enabled"
