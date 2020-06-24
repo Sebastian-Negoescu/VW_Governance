@@ -1159,6 +1159,35 @@
                             "Logging": "Enabled"
                         }
                     }
+                },
+                {
+                    "condition": "[equals(parameters('Operating_System'), 'Windows')]",
+                    "type": "Microsoft.Compute/virtualMachines/extensions",
+                    "apiVersion": "2019-12-01",
+                    "name": "[concat(variables('vmName'), 'Windows', copyIndex(), '/WindowsDiskEncryption')]",
+                    "location": "[parameters('Location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Windows', copyIndex()))]"
+                    ],
+                    "copy": {
+                        "name": "DiskEncryptionWindows-Copy",
+                        "count": "[parameters('Cluster_Size')]"
+                    },
+                    "properties": {
+                        "publisher": "Microsoft.Azure.Security",
+                        "type": "AzureDiskEncryption",
+                        "typeHandlerVersion": "2.2",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "EncryptionOperation": "EnableEncryption",
+                            "KeyVaultURL": "[reference(parameters('KeyVault_Reference'), '2019-09-01').vaultUri]",
+                            "KeyVaultResourceId": "[parameters('KeyVault_Reference')]",
+                            "KeyEncryptionKeyURL": "[parameters('KeyVault_KeyReference')]",
+                            "KekVaultResourceId": "[if(empty(parameters('KeyVault_KeyReference')), '', parameters('KeyVault_Reference'))]",
+                            "KeyEncryptionAlgorithm": "RSA-OAEP",
+                            "VolumeType": "All"
+                        }
+                    }
                 }
             ],
             "outputs": {
