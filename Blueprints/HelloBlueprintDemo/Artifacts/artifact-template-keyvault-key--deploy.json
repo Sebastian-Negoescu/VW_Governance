@@ -79,14 +79,21 @@
                         "forceUpdateTag": "[parameters('Script_Tag')]",
                         "azPowerShellVersion": "3.0",
                         "timeout": "PT1H",
-                        "arguments": "[format(' -vaultName {0} -keyName {1}', parameters('KeyVault_Name'), parameters('KeyVault_KeyName'))]",
+                        "arguments": "[format(' -vaultName {0} -keyName {1} -identityName {2}', parameters('KeyVault_Name'), parameters('KeyVault_KeyName'), variables('identityName'))]",
                         "scriptContent": "
                             param(
                             [string] [Parameter(Mandatory=$true)] $vaultName,
-                            [string] [Parameter(Mandatory=$true)] $keyName
+                            [string] [Parameter(Mandatory=$true)] $keyName,
+                            [string] [Parameter(Mandatory=$true)] $identityName
                             )
                             $ErrorActionPreference = 'Stop'
                             $DeploymentScriptOutputs = @{}
+
+                            Write-Host 'Must add the UserAssigned Managed ID to the AzKvContributors AD Group...'
+                            $identityObject = Get-AzADServicePrincipal | Where-Object -like $identityName
+                            Add-AzADGroupMember -MemberObjectId $identityObject -TargetGroupDisplayName 'AzKvContributors'
+
+                            Start-Sleep -Seconds 15
 
                             $myKek = Add-AzKeyVaultKey -VaultName $vaultName -Name $keyName -Destination 'Software'
                             $myKekSplit = $myKek.Id.Split(':443')
