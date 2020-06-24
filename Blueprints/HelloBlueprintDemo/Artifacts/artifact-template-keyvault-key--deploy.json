@@ -82,7 +82,7 @@
                         "forceUpdateTag": "[parameters('Script_Tag')]",
                         "azPowerShellVersion": "3.0",
                         "timeout": "PT1H",
-                        "arguments": "[format(' -vaultName {0} -keyName {1} -identityName {2} -kekSecret {3}', parameters('KeyVault_Name'), parameters('KeyVault_KeyName'), variables('identityName'), parameters('KeyVault_KekSecret)'))]",
+                        "arguments": "[format(' -vaultName {0} -keyName {1} -identityName {2} -kekSecret {3}', parameters('KeyVault_Name'), parameters('KeyVault_KeyName'), variables('identityName'), parameters('KeyVault_KekSecret'))]",
                         "scriptContent": "
                             param(
                             [string] [Parameter(Mandatory=$true)] $vaultName,
