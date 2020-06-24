@@ -76,7 +76,7 @@
                     },
                     "kind": "AzurePowerShell",
                     "properties": {
-                        "forceUpdateTag": "[parameters('newGuid')]",
+                        "forceUpdateTag": "[parameters('Script_Tag')]",
                         "azPowerShellVersion": "3.0",
                         "timeout": "PT1H",
                         "arguments": "[format(' -vaultName {0} -keyName {1}', parameters('KeyVault_Name'), parameters('KeyVault_KeyName'))]",
