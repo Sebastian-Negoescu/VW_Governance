@@ -6,6 +6,7 @@
         "description": "Virtual Machines that will host our DevOps agents.",
         "dependsOn": [
             "artifact-template-keyvault--deploy",
+            "artifact-template-keyvault-key--deploy",
             "artifact-template-network-interface--deploy",
             "artifact-template-storage-account--deploy",
             "artifact-template-loganalytics--deploy"
@@ -34,6 +35,9 @@
                     "type": "string",
                     "defaultValue": "ansible"
                 },
+                "KeyVault_Name": {
+                    "type": "string"
+                },
                 "KeyVault_Reference": {
                     "type": "string"
                 },
@@ -42,6 +46,9 @@
                 },
                 "KeyVault_AdminSsh": {
                     "type": "securestring"
+                },
+                "KeyVault_KeyReference": {
+                    "type": "string"
                 },
                 "StorageAccount_BlobUri": {
                     "type": "string"
@@ -171,10 +178,40 @@
                     "condition": "[equals(parameters('Operating_System'), 'Linux')]",
                     "type": "Microsoft.Compute/virtualMachines/extensions",
                     "apiVersion": "2019-12-01",
-                    "name": "[concat(variables('vmName'), 'Linux', copyIndex(), '/OMSLinux')]",
+                    "name": "[concat(variables('vmName'), 'Linux', copyIndex(), '/LinuxDiskEncryption')]",
                     "location": "[parameters('Location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]"
+                    ],
+                    "copy": {
+                        "name": "DiskEncryptionLinux-Copy",
+                        "count": "[parameters('Cluster_Size')]"
+                    },
+                    "properties": {
+                        "publisher": "Microsoft.Azure.Security",
+                        "type": "AzureDiskEncryptionForLinux",
+                        "typeHandlerVersion": "1.1",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "EncryptionOperation": "EnableEncryption",
+                            "KeyVaultURL": "[reference(parameters('KeyVault_Reference'), '2019-09-01').vaultUri]",
+                            "KeyVaultResourceId": "[parameters('KeyVault_Reference')]",
+                            "KeyEncryptionKeyURL": "[parameters('KeyVault_KeyReference')]",
+                            "KekVaultResourceId": "[if(empty(parameters('KeyVault_KeyReference')), '', parameters('KeyVault_Reference'))]",
+                            "KeyEncryptionAlgorithm": "RSA-OAEP",
+                            "VolumeType": "All"
+                        }
+                    }
+                },
+                {
+                    "condition": "[equals(parameters('Operating_System'), 'Linux')]",
+                    "type": "Microsoft.Compute/virtualMachines/extensions",
+                    "apiVersion": "2019-12-01",
+                    "name": "[concat(variables('vmName'), 'Linux', copyIndex(), '/OMSLinux')]",
+                    "location": "[parameters('Location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]",
+                        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmName'), 'Linux', copyIndex()), 'LinuxDiskEncryption')]"
                     ],
                     "copy": {
                         "name": "OMSExtension-Copy",
@@ -1145,6 +1182,9 @@
             "Operating_System": {
                 "value": "[parameters('Agent_OperatingSystem')]"
             },
+            "KeyVault_Name": {
+                "value": "[artifacts('artifact-template-keyvault--deploy').outputs.myKeyVaultName]"
+            },
             "KeyVault_Reference": {
                 "value": "[artifacts('artifact-template-keyvault--deploy').outputs.myKeyVaultId]"
             },
@@ -1163,6 +1203,9 @@
                     },
                     "secretName": "adminSsh"
                 }
+            },
+            "KeyVault_KeyReference": {
+                "value": "[artifacts('artifact-template-keyvault-key--deploy').outputs.KeyEncryptionKeyURL]"
             },
             "StorageAccount_BlobUri": {
                 "value": "[artifacts('artifact-template-storage-account--deploy').outputs.storageAccountPrimaryEndpointsBlobUri]"
