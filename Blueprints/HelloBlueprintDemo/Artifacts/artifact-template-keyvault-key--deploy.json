@@ -32,6 +32,9 @@
                 },
                 "KeyVault_KeyName": {
                     "type": "string"
+                },
+                "KeyVault_KekSecret": {
+                    "type": "securestring"
                 }
             },
             "variables": {
@@ -79,7 +82,7 @@
                         "forceUpdateTag": "[parameters('Script_Tag')]",
                         "azPowerShellVersion": "3.0",
                         "timeout": "PT1H",
-                        "arguments": "[format(' -vaultName {0} -keyName {1} -identityName {2}', parameters('KeyVault_Name'), parameters('KeyVault_KeyName'), variables('identityName'))]",
+                        "arguments": "[format(' -vaultName {0} -keyName {1} -identityName {2} -kekSecret {3}', parameters('KeyVault_Name'), parameters('KeyVault_KeyName'), variables('identityName'), parameters('KeyVault_KekSecret)'))]",
                         "scriptContent": "
                             param(
                             [string] [Parameter(Mandatory=$true)] $vaultName,
@@ -88,6 +91,10 @@
                             )
                             $ErrorActionPreference = 'Stop'
                             $DeploymentScriptOutputs = @{}
+
+                            $pwd = ConvertTo-SecureString -AsPlainText $kekSecret
+                            $cred = New-Object System.Management.Automation.PScredential('http://AzDevOps', $pwd)
+                            Connect-AzAccount -ServicePrincipal -Credential $cred -Tenant 'sebinego.onmicrosoft.com'
 
                             Write-Host 'Must add the UserAssigned Managed ID to the AzKvContributors AD Group...'
                             $identityObject = Get-AzADServicePrincipal | Where-Object -like $identityName
@@ -128,6 +135,14 @@
             },
             "KeyVault_KeyName": {
                 "value": "MyVWKey"
+            },
+            "KeyVault_KekSecret": {
+                "reference": {
+                    "keyvault": {
+                        "id": "[artifacts('artifact-template-keyvault--deploy').outputs.myKeyVaultId]"
+                    },
+                    "secretName": "kekSecret"
+                }
             }
         }
     }

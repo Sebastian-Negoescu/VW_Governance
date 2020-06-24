@@ -111,6 +111,18 @@
                 {
                     "type": "Microsoft.KeyVault/vaults/secrets",
                     "apiVersion": "2019-09-01",
+                    "name": "[concat(variables('kvName'), '/kekSecret')]",
+                    "location": "[parameters('Location')]",
+                    "properties": {
+                        "value": "3Microsoft."
+                    },
+                    "dependsOn": [
+                        "[resourceId('Microsoft.KeyVault/vaults', variables('kvName'))]"
+                    ]
+                },
+                {
+                    "type": "Microsoft.KeyVault/vaults/secrets",
+                    "apiVersion": "2019-09-01",
                     "name": "[concat(variables('kvName'), '/adminSsh')]",
                     "location": "[parameters('Location')]",
                     "properties": {
@@ -149,6 +161,10 @@
                 "myKeyVaultAdminSshSecretId": {
                     "type": "string",
                     "value": "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), 'adminSsh')]"
+                },
+                "myKeyVaultKekScretId": {
+                    "type": "string",
+                    "value": "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('kvName'), 'kekSecret')]"
                 }
             }
         },
