@@ -89,7 +89,7 @@
                             [string] [Parameter(Mandatory=$true)] $keyName,
                             [string] [Parameter(Mandatory=$true)] $identityName
                             )
-                            $ErrorActionPreference = 'Stop'
+                            
                             $DeploymentScriptOutputs = @{}
 
                             $pwd = ConvertTo-SecureString '3Microsoft.' -AsPlainText
@@ -107,7 +107,7 @@
                             $myKekUrl = $myKekSplit[0] + $myKekSplit[1]
                             $DeploymentScriptOutputs['kekUrl'] = $myKekUrl
                         ",
-                        "cleanupPreference": "Always",
+                        "cleanupPreference": "OnSuccess",
                         "retentionInterval": "P1D"
                     }
                 }
