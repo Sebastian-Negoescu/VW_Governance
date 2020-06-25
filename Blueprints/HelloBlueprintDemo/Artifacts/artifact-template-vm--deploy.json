@@ -197,7 +197,7 @@
                             "KeyVaultURL": "[reference(parameters('KeyVault_Reference'), '2019-09-01').vaultUri]",
                             "KeyVaultResourceId": "[parameters('KeyVault_Reference')]",
                             "KeyEncryptionAlgorithm": "RSA-OAEP",
-                            "VolumeType": "OS"
+                            "VolumeType": "All"
                         }
                     }
                 },
