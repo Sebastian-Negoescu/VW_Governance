@@ -178,7 +178,7 @@ stages:
                 }
 
                 ########################### WAIT FOR THE ASSIGNMENT TO COMPLETE
-                $timeout = New-Timespan -Seconds 1000
+                $timeout = New-Timespan -Seconds 1800
                 $sw = [Diagnostics.StopWatch]::StartNew()
 
                 While (($sw.elapsed -lt $timeout) -and ($assignmentStatus.ProvisioningState -ne "Succeeded") -and ($assignmentStatus.ProvisioningState -ne "Failed")) {
