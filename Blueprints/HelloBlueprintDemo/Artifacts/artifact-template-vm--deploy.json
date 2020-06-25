@@ -196,10 +196,8 @@
                             "EncryptionOperation": "EnableEncryption",
                             "KeyVaultURL": "[reference(parameters('KeyVault_Reference'), '2019-09-01').vaultUri]",
                             "KeyVaultResourceId": "[parameters('KeyVault_Reference')]",
-                            "KeyEncryptionKeyURL": "[parameters('KeyVault_KeyReference')]",
-                            "KekVaultResourceId": "[if(empty(parameters('KeyVault_KeyReference')), '', parameters('KeyVault_Reference'))]",
                             "KeyEncryptionAlgorithm": "RSA-OAEP",
-                            "VolumeType": "All"
+                            "VolumeType": "OS"
                         }
                     }
                 },
@@ -1033,7 +1031,7 @@
                             "dataDisks": []
                         },
                         "osProfile": {
-                            "computerName": "[concat('My', parameters('Operating_System'), 'Agent', copyIndex())]",
+                            "computerName": "[concat('MyWinAgent', copyIndex())]",
                             "adminUserName": "[parameters('adminUserName')]",
                             "adminPassword": "[parameters('KeyVault_AdminPassword')]",
                             "windowsConfiguration": {
@@ -1182,10 +1180,8 @@
                             "EncryptionOperation": "EnableEncryption",
                             "KeyVaultURL": "[reference(parameters('KeyVault_Reference'), '2019-09-01').vaultUri]",
                             "KeyVaultResourceId": "[parameters('KeyVault_Reference')]",
-                            "KeyEncryptionKeyURL": "[parameters('KeyVault_KeyReference')]",
-                            "KekVaultResourceId": "[if(empty(parameters('KeyVault_KeyReference')), '', parameters('KeyVault_Reference'))]",
                             "KeyEncryptionAlgorithm": "RSA-OAEP",
-                            "VolumeType": "All"
+                            "VolumeType": "OS"
                         }
                     }
                 }
