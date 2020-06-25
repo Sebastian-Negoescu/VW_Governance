@@ -99,8 +99,8 @@
                             Write-Host 'Selected Subscription is:'$targetSubscription.Id''
 
                             Write-Host 'Must add the UserAssigned Managed ID to the AzKvContributors AD Group...'
-                            $identityObject = Get-AzADServicePrincipal | Where-Object -like $identityName
-                            Add-AzADGroupMember -MemberObjectId $identityObject -TargetGroupDisplayName 'AzKvContributors'
+                            $identityObject = Get-AzADServicePrincipal | Where-Object DisplayName -like $identityName
+                            Add-AzADGroupMember -MemberObjectId $identityObject.Id -TargetGroupDisplayName 'AzKvContributors'
 
                             Start-Sleep -Seconds 15
 
