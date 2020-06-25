@@ -95,6 +95,8 @@
                             $pwd = ConvertTo-SecureString '3Microsoft.' -AsPlainText
                             $cred = New-Object System.Management.Automation.PScredential('http://AzDevOps', $pwd)
                             Connect-AzAccount -ServicePrincipal -Credential $cred -Tenant 'sebinego.onmicrosoft.com'
+                            $targetSubscription = Get-AzSubscription | Where-Object Name -like 'VSEnterprise_DEV'
+                            Write-Host 'Selected Subscription is:'$targetSubscription.Id''
 
                             Write-Host 'Must add the UserAssigned Managed ID to the AzKvContributors AD Group...'
                             $identityObject = Get-AzADServicePrincipal | Where-Object -like $identityName
