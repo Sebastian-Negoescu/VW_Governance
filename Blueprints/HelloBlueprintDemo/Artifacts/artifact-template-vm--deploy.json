@@ -123,7 +123,7 @@
                     },
                     "properties": {
                         "hardwareProfile": {
-                            "vmSize": "Standard_B8ms"
+                            "vmSize": "Standard_D2_v3"
                         },
                         "storageProfile": {
                             "imageReference": {
@@ -1016,7 +1016,7 @@
                     },
                     "properties": {
                         "hardwareProfile": {
-                            "vmSize": "Standard_B8ms"
+                            "vmSize": "Standard_D2_v3"
                         },
                         "storageProfile": {
                             "imageReference": {
