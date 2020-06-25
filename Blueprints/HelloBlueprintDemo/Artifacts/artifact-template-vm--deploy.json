@@ -985,7 +985,7 @@
                     "location": "[parameters('Location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]",
-                        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmName'), 'Linux', copyIndex(), 'DiagnosticsLinux'))]"
+                        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmName'), 'Linux', copyIndex()), 'DiagnosticsLinux')]"
                     ],
                     "copy": {
                         "name": "QualysAgentLinux-Copy",
