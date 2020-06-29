@@ -178,33 +178,6 @@
                     "condition": "[equals(parameters('Operating_System'), 'Linux')]",
                     "type": "Microsoft.Compute/virtualMachines/extensions",
                     "apiVersion": "2019-12-01",
-                    "name": "[concat(variables('vmName'), 'Linux', copyIndex(), '/DiskEncryptionLinux')]",
-                    "location": "[parameters('Location')]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]"
-                    ],
-                    "copy": {
-                        "name": "DiskEncryptionLinux-Copy",
-                        "count": "[parameters('Cluster_Size')]"
-                    },
-                    "properties": {
-                        "publisher": "Microsoft.Azure.Security",
-                        "type": "AzureDiskEncryptionForLinux",
-                        "typeHandlerVersion": "1.1",
-                        "autoUpgradeMinorVersion": true,
-                        "settings": {
-                            "EncryptionOperation": "EnableEncryption",
-                            "KeyVaultURL": "[reference(parameters('KeyVault_Reference'), '2019-09-01').vaultUri]",
-                            "KeyVaultResourceId": "[parameters('KeyVault_Reference')]",
-                            "KeyEncryptionAlgorithm": "RSA-OAEP",
-                            "VolumeType": "All"
-                        }
-                    }
-                },
-                {
-                    "condition": "[equals(parameters('Operating_System'), 'Linux')]",
-                    "type": "Microsoft.Compute/virtualMachines/extensions",
-                    "apiVersion": "2019-12-01",
                     "name": "[concat(variables('vmName'), 'Linux', copyIndex(), '/OMSLinux')]",
                     "location": "[parameters('Location')]",
                     "dependsOn": [
@@ -254,9 +227,8 @@
                     "location": "[parameters('Location')]",
                     "dependsOn": [
                         "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]",
-                        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmName'), 'Linux', copyIndex()), 'DiskEncryptionLinux')]",
-                        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmName'), 'Linux', copyIndex()), 'DependencyAgentLinux')]",
-                        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmName'), 'Linux', copyIndex()), 'OMSLinux')]"
+                        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmName'), 'Linux', copyIndex()), 'OMSLinux')]",
+                        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmName'), 'Linux', copyIndex()), 'DependencyAgentLinux')]"
                     ],
                     "copy": {
                         "name": "DIAGExtensionLinux-Copy",
@@ -982,7 +954,8 @@
                     "name": "[concat(variables('vmName'), 'Linux', copyIndex(), '/QualysAgentLinux')]",
                     "location": "[parameters('Location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]"
+                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]",
+                        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmName'), 'Linux', copyIndex()), 'DiagnosticsLinux')]"
                     ],
                     "copy": {
                         "name": "QualysAgentLinux-Copy",
@@ -998,6 +971,36 @@
                             "ResourceID": "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]",
                             "VmRegion": "[parameters('Location')]",
                             "Logging": "Enabled"
+                        }
+                    }
+                },
+                {
+                    "condition": "[equals(parameters('Operating_System'), 'Linux')]",
+                    "type": "Microsoft.Compute/virtualMachines/extensions",
+                    "apiVersion": "2019-12-01",
+                    "name": "[concat(variables('vmName'), 'Linux', copyIndex(), '/DiskEncryptionLinux')]",
+                    "location": "[parameters('Location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Linux', copyIndex()))]",
+                        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmName'), 'Linux', copyIndex()), 'OMSLinux')]",
+                        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmName'), 'Linux', copyIndex()), 'DependencyAgentLinux')]",
+                        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmName'), 'Linux', copyIndex()), 'DiagnosticsLinux')]"
+                    ],
+                    "copy": {
+                        "name": "DiskEncryptionLinux-Copy",
+                        "count": "[parameters('Cluster_Size')]"
+                    },
+                    "properties": {
+                        "publisher": "Microsoft.Azure.Security",
+                        "type": "AzureDiskEncryptionForLinux",
+                        "typeHandlerVersion": "1.1",
+                        "autoUpgradeMinorVersion": true,
+                        "settings": {
+                            "EncryptionOperation": "EnableEncryption",
+                            "KeyVaultURL": "[reference(parameters('KeyVault_Reference'), '2019-09-01').vaultUri]",
+                            "KeyVaultResourceId": "[parameters('KeyVault_Reference')]",
+                            "KeyEncryptionAlgorithm": "RSA-OAEP",
+                            "VolumeType": "All"
                         }
                     }
                 },
