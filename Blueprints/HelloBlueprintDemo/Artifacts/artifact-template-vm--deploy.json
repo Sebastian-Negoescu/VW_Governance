@@ -1110,7 +1110,9 @@
                     "name": "[concat(variables('vmName'), 'Windows', copyIndex(), '/DiagnosticsWindows')]",
                     "location": "[parameters('Location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Windows', copyIndex()))]"
+                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Windows', copyIndex()))]",
+                        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmName'), 'Windows', copyIndex()), 'OMSWindows')]",
+                        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmName'), 'Windows', copyIndex()), 'DependencyAgentWindows')]"
                     ],
                     "copy": {
                         "name": "DIAGExtensionWindows-Copy",
@@ -1139,7 +1141,8 @@
                     "name": "[concat(variables('vmName'), 'Windows', copyIndex(), '/QualysAgentWindows')]",
                     "location": "[parameters('Location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Windows', copyIndex()))]"
+                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Windows', copyIndex()))]",
+                        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmName'), 'Windows', copyIndex()), 'DiagnosticsWindows')]"
                     ],
                     "copy": {
                         "name": "QualysAgentWindows-Copy",
@@ -1165,7 +1168,8 @@
                     "name": "[concat(variables('vmName'), 'Windows', copyIndex(), '/DiskEncryptionWindows')]",
                     "location": "[parameters('Location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Windows', copyIndex()))]"
+                        "[resourceId('Microsoft.Compute/virtualMachines', concat(variables('vmName'), 'Windows', copyIndex()))]",
+                        "[resourceId('Microsoft.Compute/virtualMachines/extensions', concat(variables('vmName'), 'Windows', copyIndex()), 'QualysAgentWindows')]"
                     ],
                     "copy": {
                         "name": "DiskEncryptionWindows-Copy",
