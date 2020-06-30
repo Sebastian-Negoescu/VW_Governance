@@ -1,0 +1,69 @@
+{
+    "kind": "template",
+    "name": "azuresentinel",
+    "properties": {
+        "displayName": "Azure Sentinel Security Insights",
+        "description": "Azure Sentinel Security Insights Solution deployed for SIEM && SOAR purposes.",
+        "dependsOn": [
+            "artifact-template-loganalytics--deploy"
+        ],
+        "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "parameters": {
+                "Prefix": {
+                    "type": "string"
+                },
+                "Location": {
+                    "type": "string"
+                },
+                "LogAnalytics_Name": {
+                    "type": "string"
+                },
+                "LogAnalytics_Ref": {
+                    "type": "string"
+                }
+            },
+            "variables": {
+                "solutionName": "[concat('SecurityInsights(', parameters('LogAnalytics_Name'), ')')]"
+            },
+            "resources": [
+                {
+                    "type": "Microsoft.OperationsManagement/solutions",
+                    "apiVersion": "2015-11-01-preview",
+                    "name": "[variables('solutionName')]",
+                    "location": "[parameters('Location')]",
+                    "dependsOn": [
+                        "[parameters('LogAnalytics_Ref')]"
+                    ],
+                    "plan": {
+                        "name": "[variables('solutionName')]",
+                        "publisher": "Microsoft",
+                        "product": "OMSGallery/SecurityInsights",
+                        "promotionCode": ""
+                    },
+                    "properties": {
+                        "workspaceResourceId": "[parameters('LogAnalytics_Ref')]",
+                        "containedResources": []
+                    }
+                }
+            ],
+            "outputs": {}
+        },
+        "resourceGroup": "Security-RG",
+        "parameters": {
+            "Prefix": {
+                "value": "[parameters('Prefix')]"
+            },
+            "Location": {
+                "value": "[parameters('Azure_Region')]"
+            },
+            "LogAnalytics_Name": {
+                "value": "[artifacts('artifact-template-loganalytics--deploy').outputs.logAnalyticsWorkspaceName]"
+            },
+            "LogAnalytics_Ref": {
+                "value": "[artifacts('artifact-template-loganalytics--deploy').outputs.logAnalyticsResourceId]"
+            }
+        }
+    }
+}
