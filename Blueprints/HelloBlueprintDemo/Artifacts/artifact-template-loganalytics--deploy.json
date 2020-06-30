@@ -431,7 +431,7 @@
                 },
                 "logAnalyticsResourceId": {
                     "type": "string",
-                    "value": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName')), '2020-03-01-preview').resourceId]"
+                    "value": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName')), '2020-03-01-preview', 'Full').resourceId]"
                 }
             }
         },
