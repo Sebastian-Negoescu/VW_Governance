@@ -34,16 +34,16 @@
                     "name": "[variables('solutionName')]",
                     "location": "[parameters('Location')]",
                     "dependsOn": [
-                        "[concat('/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/resourceGroups/', parameters('Prefix'), '-Storage-RG/providers/Microsoft.OperationalInsights/workspaces/', parameters('LogAnalytics_Name'))]"
+                        "[reference(parameters('LogAnalytics_Ref'), '2020-03-01-preview')]"
                     ],
                     "plan": {
                         "name": "[variables('solutionName')]",
                         "publisher": "Microsoft",
                         "product": "OMSGallery/SecurityInsights",
-                        "promotionCode": ""
+                        "promotionCode": "[reference(parameters('LogAnalytics_Ref'), '2020-03-01-preview')]"
                     },
                     "properties": {
-                        "workspaceResourceId": "[concat('/subscriptions/ac658ff9-95d0-4719-9f1f-58c5554960c9/resourceGroups/', parameters('Prefix'), '-Storage-RG/providers/Microsoft.OperationalInsights/workspaces/', parameters('LogAnalytics_Name'))]",
+                        "workspaceResourceId": "",
                         "containedResources": []
                     }
                 }
