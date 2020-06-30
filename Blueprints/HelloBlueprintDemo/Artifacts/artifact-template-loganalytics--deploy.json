@@ -424,6 +424,14 @@
                 "logAnalyticsPrimaryKey": {
                     "type": "string",
                     "value": "[listKeys(resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName')), '2020-03-01-preview').primarySharedKey]"
+                },
+                "logAnalyticsWorkspaceName": {
+                    "type": "string",
+                    "value": "[variables('workspaceName')]"
+                },
+                "logAnalyticsResourceId": {
+                    "type": "string",
+                    "value": "[reference(resourceId('Microsoft.OperationalInsights/workspaces', variables('workspaceName')), '2020-03-01-preview').resourceId]"
                 }
             }
         },
