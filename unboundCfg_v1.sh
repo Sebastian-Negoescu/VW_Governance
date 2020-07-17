@@ -16,8 +16,8 @@ sudo ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
 azure_dns=168.63.129.16
 cloud_domain=dev.devstack.euw.adz.cloud.vwgroup.com
 onprem_domain=aws.vwg
-on_prem_dns1=10.199.34.18
-on_prem_dns2=10.199.254.117
+on_prem_dns1=10.222.20.201
+on_prem_dns2=10.222.20.184
 
 #Install dependencies and updates
 sudo apt update -y
